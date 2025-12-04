@@ -1,4 +1,5 @@
 # Gradient Card Custom Visual for Power BI
+This custom card and this doc were written using Copilot in VS code.
 
 ## 1. What It Is
 
