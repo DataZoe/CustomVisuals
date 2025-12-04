@@ -4,6 +4,8 @@
 
 The **Gradient Card** is a custom Power BI visual that displays key metrics as visually appealing cards with customizable gradient backgrounds. It supports single cards or small multiples (multiple cards in a grid layout), making it ideal for KPI dashboards, scorecards, and executive summaries. Each card can display a primary value, comparison/target value, progress bar, badge indicator, and optional icon.
 
+**Inspiration:** This visual was inspired by [Charles Edward's SVG card concept](https://www.linkedin.com/posts/edward-charles-085025b1_last-weekend-i-spoke-with-adrian-liu-about-activity-7400397799328083968-l04h). Thank you Charles for sharing your creative approach!
+
 ---
 
 ## 2. Key Benefits
@@ -34,6 +36,7 @@ The **Gradient Card** is a custom Power BI visual that displays key metrics as v
 
 - **Gradient Background** – Two-color gradient with customizable angle (0-360°)
 - **Border Radius** – Rounded corners (adjustable)
+- **Card Border** – Optional border with customizable width, color, and style (solid, dashed, dotted)
 - **Padding & Spacing** – Control internal spacing between elements
 - **Small Multiples Grid** – Automatic responsive grid layout with configurable minimum card width and padding
 
@@ -46,7 +49,7 @@ The **Gradient Card** is a custom Power BI visual that displays key metrics as v
 ### Badge Indicator
 
 - Displays percentage of target achieved
-- Conditional coloring (matches progress bar colors when target is met/not met)
+- **Three-Tier Conditional Coloring** – Matches progress bar colors for below/above marker/100%
 - Customizable background, border, font, and padding
 - Adjustable fill lightness for background tint
 
@@ -67,10 +70,15 @@ The **Gradient Card** is a custom Power BI visual that displays key metrics as v
 
 ### Details Section (Target/Comparison)
 
-- Shows "Target: [value]" and "Exceeded: [value]" when comparison data exists
-- Customizable labels ("Target", "Exceeded")
+- Shows "Target: [value]" and variance when comparison data exists
+- **Three-Tier Variance Labels**:
+  - "To go:" when below target % marker
+  - "Exceeded:" when at/above target % marker but below 100%
+  - "Achieved:" when actual ≥ target (100%)
+- Customizable labels for each state
+- Show/hide +/- sign on variance values
 - Separate colors for labels, values, and exceeded amounts
-- Optional color matching with progress bar (green when met, gold when below)
+- Optional color matching with progress bar (three-tier colors)
 - Separator styling
 
 ### Progress Bar
@@ -78,8 +86,11 @@ The **Gradient Card** is a custom Power BI visual that displays key metrics as v
 - Visual progress indicator comparing actual vs. target
 - **Data-Driven Mode** – Automatically calculates from Primary and Comparison fields
 - **Manual Mode** – Set fixed max value and marker position
-- Conditional coloring (different colors above/below marker)
-- Customizable marker (position, color, width, height)
+- **Three-Tier Color System**:
+  - Color when below target % marker
+  - Color when at/above target % marker (but below 100%)
+  - Color when at/above 100% (actual ≥ target)
+- Customizable marker (position, color, width, height) – auto-hides when > 100%
 - Progress label with percentage display
 - Adjustable bar height and border radius
 
@@ -207,10 +218,10 @@ Show headcount, turnover, satisfaction scores with department categories creatin
 2. Expand **Progress Bar**
 3. Toggle **Show** to On
 4. Configure settings:
-   - **Data Driven**: On (uses Primary/Comparison) or Off (manual)
-   - **Bar Color**: Color when target is met
-   - **Bar Color Below Marker**: Color when below target
-   - **Show Marker**: Toggle the target line
+   - **Bar Color Below Marker**: Color when below target % marker
+   - **Bar Color**: Color when at/above target % marker
+   - **Bar Color at 100%**: Color when actual ≥ target (default green)
+   - **Show Marker**: Toggle the target line (auto-hides if > 100%)
    - **Show Label**: Display percentage text
 
 ### Step 7: Customize the Appearance
@@ -315,7 +326,7 @@ Show headcount, turnover, satisfaction scores with department categories creatin
 
 | Version | Date | Changes |
 |---------|------|---------|
-| 1.2.4.0 | Dec 2025 | Added high-contrast mode support, keyboard navigation |
+| 1.2.4.0 | Dec 2025 | High-contrast mode, keyboard navigation, three-tier progress system (below marker/above marker/100%), card border options, customizable variance labels |
 | 1.2.3.0 | Dec 2025 | Field parameter support for Primary and Comparison fields |
 
 ---
