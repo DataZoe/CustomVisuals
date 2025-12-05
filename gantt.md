@@ -4,6 +4,8 @@ A powerful, feature-rich Gantt chart custom visual for Microsoft Power BI that h
 
 ![Gantt Chart Visual](assets/gantt-icon.png)
 
+This doc and the visual were created with Copilot in VS Code.
+
 ## What is a Gantt Chart?
 
 A Gantt chart is a horizontal bar chart used in project management to visualize a project schedule. Each task is represented as a horizontal bar, with the bar's position and length indicating the task's start date, end date, and duration. Gantt charts make it easy to see:
@@ -14,6 +16,10 @@ A Gantt chart is a horizontal bar chart used in project management to visualize 
 - **Which tasks** depend on others
 - **Where** tasks overlap
 - **The critical path** through your project
+
+![Gantt Chart Visual](assets/gantt-chart.png)
+
+![Gantt Chart Visual](assets/gantt-chart-with-critical-path.png)
 
 ## Key Benefits
 
