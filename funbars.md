@@ -4,11 +4,13 @@ Visual and this doc create with Copilot for github.
 
 A creative, highly customizable column chart visual for Microsoft Power BI that transforms ordinary bar charts into visually striking data presentations with image backgrounds, patterns, gradients, and the signature Power BI logo-style overlapping bars.
 
-![FunBars Visual](icon.png)
+![FunBars Visual](assets/funbars-icon.png)
 
 ## What is FunBars?
 
 FunBars is a custom column chart visual that goes beyond standard bar charts by offering extensive styling options. Whether you need professional business charts with subtle gradients or playful presentations with image backgrounds and patterns, FunBars delivers the flexibility to create charts that match your vision.
+
+![FunBars Visual in Power BI](assets/funbars-visual.png)
 
 Key visual effects include:
 - **Image Backgrounds** - Fill bars with images (packages, money, buildings, textures, and more)
