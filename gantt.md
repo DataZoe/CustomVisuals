@@ -38,6 +38,12 @@ Tasks that have been pushed past their original dates due to dependencies are au
 ### 🎯 Milestone Support
 Tasks without an end date (or with the same start and end date) are displayed as diamond-shaped milestones, perfect for marking key project deliverables.
 
+### 📈 Progress Tracking
+Add a Progress % field to show task completion as an overlay bar on each task. The progress bar fills from left to right based on the percentage (0-100).
+
+### 📍 Custom Marker Lines
+Add one or more date measures to display vertical marker lines on the chart. Perfect for deadlines, milestones, phase gates, or any significant dates. Each marker shows the measure name as a label.
+
 ### 📁 Category Grouping
 Organize tasks into collapsible categories for better organization of large projects. Summary bars show the span of each category.
 
@@ -64,6 +70,8 @@ Organize tasks into collapsible categories for better organization of large proj
 | **Category** | Optional | Groups tasks into collapsible sections |
 | **Task ID** | Optional | Unique identifier for dependency linking |
 | **Dependencies** | Optional | Comma-separated Task IDs that must complete first |
+| **Progress %** | Optional | Task completion percentage (0-100). Displays as progress bar overlay |
+| **Marker Dates** | Optional | Custom dates for vertical marker lines. Add multiple measures |
 | **Tooltips** | Optional | Additional data fields to show in tooltips |
 
 ## How to Use
@@ -121,21 +129,31 @@ Optionally include:
 
 Copy this data into Excel or create it in Power BI:
 
-| TaskID | Category | Task | StartDate | EndDate | Dependencies |
-|--------|----------|------|-----------|---------|--------------|
-| 1 | Planning | Project Kickoff | 2025-01-06 | 2025-01-06 | |
-| 2 | Planning | Requirements Gathering | 2025-01-07 | 2025-01-17 | 1 |
-| 3 | Planning | Technical Specification | 2025-01-13 | 2025-01-24 | 2 |
-| 4 | Planning | Architecture Review | 2025-01-27 | 2025-01-27 | 3 |
-| 5 | Development | Database Design | 2025-01-28 | 2025-02-07 | 4 |
-| 6 | Development | API Development | 2025-02-03 | 2025-02-21 | 5 |
-| 7 | Development | Frontend Development | 2025-02-10 | 2025-02-28 | 5 |
-| 8 | Development | Integration | 2025-02-24 | 2025-03-07 | 6, 7 |
-| 9 | Testing | Unit Testing | 2025-02-17 | 2025-03-07 | 6 |
-| 10 | Testing | Integration Testing | 2025-03-10 | 2025-03-21 | 8, 9 |
-| 11 | Testing | User Acceptance Testing | 2025-03-24 | 2025-04-04 | 10 |
-| 12 | Deployment | Production Deployment | 2025-04-07 | 2025-04-11 | 11 |
-| 13 | Deployment | Go Live | 2025-04-14 | 2025-04-14 | 12 |
+| TaskID | Category | Task | StartDate | EndDate | Dependencies | Progress |
+|--------|----------|------|-----------|---------|--------------|----------|
+| 1 | Planning | Project Kickoff | 2025-01-06 | 2025-01-06 | | 100 |
+| 2 | Planning | Requirements Gathering | 2025-01-07 | 2025-01-17 | 1 | 100 |
+| 3 | Planning | Technical Specification | 2025-01-13 | 2025-01-24 | 2 | 75 |
+| 4 | Planning | Architecture Review | 2025-01-27 | 2025-01-27 | 3 | 0 |
+| 5 | Development | Database Design | 2025-01-28 | 2025-02-07 | 4 | 50 |
+| 6 | Development | API Development | 2025-02-03 | 2025-02-21 | 5 | 25 |
+| 7 | Development | Frontend Development | 2025-02-10 | 2025-02-28 | 5 | 10 |
+| 8 | Development | Integration | 2025-02-24 | 2025-03-07 | 6, 7 | 0 |
+| 9 | Testing | Unit Testing | 2025-02-17 | 2025-03-07 | 6 | 0 |
+| 10 | Testing | Integration Testing | 2025-03-10 | 2025-03-21 | 8, 9 | 0 |
+| 11 | Testing | User Acceptance Testing | 2025-03-24 | 2025-04-04 | 10 | 0 |
+| 12 | Deployment | Production Deployment | 2025-04-07 | 2025-04-11 | 11 | 0 |
+| 13 | Deployment | Go Live | 2025-04-14 | 2025-04-14 | 12 | 0 |
+
+### Marker Date Measures
+
+Create these DAX measures to add milestone markers:
+
+```dax
+Project Start = DATE(2025, 1, 6)
+Phase 2 Start = DATE(2025, 1, 28)
+Go Live Target = DATE(2025, 4, 14)
+```
 
 ### Step-by-Step Instructions
 
@@ -150,10 +168,18 @@ Copy this data into Excel or create it in Power BI:
    - Drag `TaskID` to the **Task ID** field
    - Drag `Dependencies` to the **Dependencies** field
    - Drag `Category` to the **Category** field
+   - Drag `Progress` to the **Progress %** field
 
-4. **Observe the results:**
+4. **Add marker date measures:**
+   - Create the DAX measures shown above
+   - Drag `Project Start`, `Phase 2 Start`, and `Go Live Target` to the **Marker Dates** field
+   - Each marker appears as a vertical line with its measure name as a label
+
+5. **Observe the results:**
    - Tasks are grouped by category (Planning, Development, Testing, Deployment)
    - Milestones (Project Kickoff, Architecture Review, Go Live) appear as diamonds
+   - Progress bars show completion status on each task
+   - Marker lines highlight key project dates
    - Dependency arrows connect related tasks
    - The critical path is highlighted
 
@@ -282,6 +308,13 @@ Copy this data into Excel or create it in Power BI:
 | Show summary | Display critical path stats | On |
 
 ## Version History
+
+### Version 2.0.2.0
+- Added Progress % field for task completion tracking
+- Added Marker Dates field for custom vertical marker lines (supports multiple measures)
+- Added Today Line with configurable offset, style, and label
+- Added task label max width and word wrap options
+- Improved label truncation with configurable width
 
 ### Version 2.0.0.0
 - Added localization support (EN, ES, FR, DE, PT-BR)
