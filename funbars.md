@@ -227,32 +227,51 @@ Your data should be in a table format with at minimum:
 |---------|-------------|---------|
 | Enable Image Background | Fill bars with images | Off |
 | Image Preset | Pre-defined images (Packages, Money, Charts, etc.) | None |
-| Custom image | URL or base64 data URI for custom image | (empty) |
-| Image Scaling | Stretch, Fit, Fill, or Tile | Stretch |
+| Custom image | URL, base64 data URI, or SVG data URI (supports conditional formatting) | (empty) |
+| Image fit | Non-tile (single image) or Tile (repeating pattern) | Non-tile |
+| Image placement | Position of image: Center, Top, Bottom, Left, Right, Top left, Top right, Bottom left, Bottom right | Center |
 | Image opacity | Image transparency (0-100%) | 100% |
+| Image scale (%) | Size of image details (25-400%). Lower = larger details, Higher = smaller details | 100% |
+
+**Custom Image Formats:**
+- **Image URL**: `https://example.com/image.png`
+- **Base64 PNG/JPG**: `data:image/png;base64,iVBORw0KGgo...`
+- **SVG data URI**: `data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg">...</svg>`
+- **SVG URL-encoded**: `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'...%3C/svg%3E`
+
+**Custom Image Examples (Galaxy theme):**
+
+*SVG Data URI:*
+```
+data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200"><defs><linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:%230a0a1a"/><stop offset="50%" style="stop-color:%231a1a3a"/><stop offset="100%" style="stop-color:%23050510"/></linearGradient><radialGradient id="n1" cx="30%" cy="50%" r="50%"><stop offset="0%" style="stop-color:%23ff69b4" stop-opacity="0.4"/><stop offset="100%" style="stop-color:%234b0082" stop-opacity="0"/></radialGradient></defs><rect fill="url(%23bg)" width="200" height="200"/><rect fill="url(%23n1)" width="200" height="200"/><circle cx="35" cy="25" r="2" fill="%23fff"/><circle cx="165" cy="45" r="1.5" fill="%23fff" opacity="0.9"/><circle cx="90" cy="80" r="1" fill="%23fff" opacity="0.7"/><circle cx="150" cy="120" r="1.5" fill="%23fff" opacity="0.8"/><circle cx="50" cy="150" r="1" fill="%23fff" opacity="0.6"/></svg>
+```
+
+*Base64 (simple starfield):*
+```
+data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAYAAABw4pVUAAAACXBIWXMAAAsTAAALEwEAmpwYAAABhklEQVR4nO3csQ3CQBAF0T2JAqiIJiiAHumBxijBEYmJnNgS0v3ZTPJ+dIE1q5W8awEAAAAAAODfLMo+9fStehqt+hqr+lofvdYAx5WeQpK4c0SyJO6ckKyIO0ckS+LOOckW4s4pyRbizinJFuLOKckW4s4pyRbizinJFuLOKckW4s4Nydq4c0OyNu7ckKyNOzckW4g7NyRbiDs3JGuIO1ckW4g7VyRbiDtXJGuIO1ckW4g7VyRbiDtXJFuIO1ckW4g7VyRrqPdaSLaQ7lUh2UK6V4VkC+leFZItpHtVSLaQ7nUg2Un6zD7tywvJTsQ7nSQ7Ee90kuwk4p1Okp1EvNNJspOIdzpJdhLxTifJTiLe6STZScQ7nSQ7iXink2QnEe90kuwk4p1Okp1EvNNJspOIdzpJdhLxTifJTiLe6STZScQ7nSQ7iXink2QnEe90kuwk4p1Okp1EvNNJspOIdzpJdtI5yZ7xTifJTure6aTeu9NJvXen0/8AAAAAAID/8gYxDXJ/BhXSSQAAAABJRU5ErkJggg==
+```
 
 **Available Image Presets:**
-- 📦 Packages
+- 📦 Packages (tile)
 - 💰 Money
-- 📊 Charts
 - 🏢 Buildings
 - ⚙️ Gears
 - 🔗 Network
-- 🎉 Confetti
-- 🔷 Geometric
+- 🎉 Confetti (tile)
+- 🔷 Geometric (tile)
 - 🌊 Waves
-- ⭕ Circles
-- 🔺 Triangles
-- ⭐ Stars
+- ⭕ Circles (tile)
+- 🔺 Triangles (tile)
+- ⭐ Stars (tile)
 - 🌃 Starry Night
 - 🌌 Galaxy
-- ❤️ Hearts
+- ❤️ Hearts (tile)
 - ☁️ Clouds
 - 🌿 Nature
-- 🎨 Abstract
-- 🪵 Wood Texture
-- 🪨 Marble
-- 🧵 Fabric
+- 🎨 Abstract (tile)
+- 🪵 Wood Texture (tile)
+- 🪨 Marble (tile)
+- 🧵 Grid (tile)
 
 ### Pattern
 
@@ -349,10 +368,19 @@ Your data should be in a table format with at minimum:
 
 ## Version History
 
+### Version 1.0.1.0
+
+- Removed Charts preset
+- Improved Packages preset with tileable scattered box pattern
+- Improved Abstract preset to be tileable
+- Renamed Fabric texture to Grid
+- Added "(tile)" indicator to preset names that tile well
+- Tileable presets: Packages, Confetti, Geometric, Circles, Triangles, Stars, Hearts, Abstract, Wood Texture, Marble, Grid
+
 ### Version 1.0.0.0
 
 - Initial release
-- Image background support with 21 presets
+- Image background support with 20 presets
 - Gradient fills with 12 presets
 - Pattern overlays with 8 types
 - Overlapping bars (Power BI logo style)
@@ -371,6 +399,10 @@ For issues, feature requests, or questions:
 
 - **Website**: <https://datazoepowerbi.com>
 - **Email**: <zoe@datazoepowerbi.com>
+
+## Acknowledgments
+
+This visual and documentation were created with the assistance of GitHub Copilot.
 
 ## License
 
