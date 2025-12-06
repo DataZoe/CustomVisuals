@@ -197,21 +197,21 @@ Go Live Target = DATE(2025, 4, 14)
 
 ### Sample Data
 
-| TaskID | Category | Task | StartDate | EndDate | Dependencies |
-|--------|----------|------|-----------|---------|--------------|
-| M1 | Strategy | Campaign Brief | 2025-02-03 | 2025-02-07 | |
-| M2 | Strategy | Target Audience Research | 2025-02-10 | 2025-02-14 | M1 |
-| M3 | Strategy | Budget Approval | 2025-02-17 | 2025-02-17 | M2 |
-| M4 | Creative | Concept Development | 2025-02-18 | 2025-02-28 | M3 |
-| M5 | Creative | Copywriting | 2025-02-24 | 2025-03-07 | M4 |
-| M6 | Creative | Design Assets | 2025-02-24 | 2025-03-14 | M4 |
-| M7 | Creative | Video Production | 2025-03-03 | 2025-03-21 | M4 |
-| M8 | Digital | Landing Page | 2025-03-10 | 2025-03-21 | M5, M6 |
-| M9 | Digital | Email Templates | 2025-03-10 | 2025-03-17 | M5 |
-| M10 | Digital | Social Media Setup | 2025-03-17 | 2025-03-21 | M6 |
-| M11 | Launch | Soft Launch | 2025-03-24 | 2025-03-28 | M8, M9, M10, M7 |
-| M12 | Launch | Full Campaign Launch | 2025-03-31 | 2025-03-31 | M11 |
-| M13 | Launch | Performance Review | 2025-04-14 | 2025-04-18 | M12 |
+| TaskID | Category | Task | StartDate | EndDate | Dependencies | Progress |
+|--------|----------|------|-----------|---------|--------------|----------|
+| M1 | Strategy | Campaign Brief | 2025-02-03 | 2025-02-07 | | 100 |
+| M2 | Strategy | Target Audience Research | 2025-02-10 | 2025-02-14 | M1 | 100 |
+| M3 | Strategy | Budget Approval | 2025-02-17 | 2025-02-17 | M2 | 100 |
+| M4 | Creative | Concept Development | 2025-02-18 | 2025-02-28 | M3 | 80 |
+| M5 | Creative | Copywriting | 2025-02-24 | 2025-03-07 | M4 | 60 |
+| M6 | Creative | Design Assets | 2025-02-24 | 2025-03-14 | M4 | 45 |
+| M7 | Creative | Video Production | 2025-03-03 | 2025-03-21 | M4 | 30 |
+| M8 | Digital | Landing Page | 2025-03-10 | 2025-03-21 | M5, M6 | 15 |
+| M9 | Digital | Email Templates | 2025-03-10 | 2025-03-17 | M5 | 20 |
+| M10 | Digital | Social Media Setup | 2025-03-17 | 2025-03-21 | M6 | 0 |
+| M11 | Launch | Soft Launch | 2025-03-24 | 2025-03-28 | M8, M9, M10, M7 | 0 |
+| M12 | Launch | Full Campaign Launch | 2025-03-31 | 2025-03-31 | M11 | 0 |
+| M13 | Launch | Performance Review | 2025-04-14 | 2025-04-18 | M12 | 0 |
 
 ### Key Observations
 
@@ -224,27 +224,27 @@ Go Live Target = DATE(2025, 4, 14)
 
 ### Sample Data
 
-| TaskID | Category | Task | StartDate | EndDate | Dependencies |
-|--------|----------|------|-----------|---------|--------------|
-| C1 | Permits | Site Survey | 2025-03-03 | 2025-03-14 | |
-| C2 | Permits | Permit Application | 2025-03-17 | 2025-03-28 | C1 |
-| C3 | Permits | Permit Approved | 2025-04-14 | 2025-04-14 | C2 |
-| C4 | Foundation | Excavation | 2025-04-15 | 2025-04-25 | C3 |
-| C5 | Foundation | Foundation Pour | 2025-04-28 | 2025-05-02 | C4 |
-| C6 | Foundation | Curing Period | 2025-05-05 | 2025-05-16 | C5 |
-| C7 | Structure | Framing | 2025-05-19 | 2025-06-13 | C6 |
-| C8 | Structure | Roofing | 2025-06-16 | 2025-06-27 | C7 |
-| C9 | Structure | Windows & Doors | 2025-06-23 | 2025-07-03 | C7 |
-| C10 | Systems | Electrical Rough-in | 2025-06-30 | 2025-07-18 | C8 |
-| C11 | Systems | Plumbing Rough-in | 2025-06-30 | 2025-07-18 | C8 |
-| C12 | Systems | HVAC Installation | 2025-07-07 | 2025-07-25 | C8 |
-| C13 | Interior | Insulation | 2025-07-21 | 2025-07-30 | C10, C11 |
-| C14 | Interior | Drywall | 2025-08-01 | 2025-08-15 | C13 |
-| C15 | Interior | Painting | 2025-08-18 | 2025-08-29 | C14 |
-| C16 | Interior | Flooring | 2025-09-01 | 2025-09-12 | C15 |
-| C17 | Finishing | Fixtures & Appliances | 2025-09-15 | 2025-09-26 | C16, C12 |
-| C18 | Finishing | Final Inspection | 2025-09-29 | 2025-09-29 | C17 |
-| C19 | Finishing | Certificate of Occupancy | 2025-10-06 | 2025-10-06 | C18 |
+| TaskID | Category | Task | StartDate | EndDate | Dependencies | Progress |
+|--------|----------|------|-----------|---------|--------------|----------|
+| C1 | Permits | Site Survey | 2025-03-03 | 2025-03-14 | | 100 |
+| C2 | Permits | Permit Application | 2025-03-17 | 2025-03-28 | C1 | 100 |
+| C3 | Permits | Permit Approved | 2025-04-14 | 2025-04-14 | C2 | 100 |
+| C4 | Foundation | Excavation | 2025-04-15 | 2025-04-25 | C3 | 100 |
+| C5 | Foundation | Foundation Pour | 2025-04-28 | 2025-05-02 | C4 | 100 |
+| C6 | Foundation | Curing Period | 2025-05-05 | 2025-05-16 | C5 | 75 |
+| C7 | Structure | Framing | 2025-05-19 | 2025-06-13 | C6 | 50 |
+| C8 | Structure | Roofing | 2025-06-16 | 2025-06-27 | C7 | 20 |
+| C9 | Structure | Windows & Doors | 2025-06-23 | 2025-07-03 | C7 | 10 |
+| C10 | Systems | Electrical Rough-in | 2025-06-30 | 2025-07-18 | C8 | 0 |
+| C11 | Systems | Plumbing Rough-in | 2025-06-30 | 2025-07-18 | C8 | 0 |
+| C12 | Systems | HVAC Installation | 2025-07-07 | 2025-07-25 | C8 | 0 |
+| C13 | Interior | Insulation | 2025-07-21 | 2025-07-30 | C10, C11 | 0 |
+| C14 | Interior | Drywall | 2025-08-01 | 2025-08-15 | C13 | 0 |
+| C15 | Interior | Painting | 2025-08-18 | 2025-08-29 | C14 | 0 |
+| C16 | Interior | Flooring | 2025-09-01 | 2025-09-12 | C15 | 0 |
+| C17 | Finishing | Fixtures & Appliances | 2025-09-15 | 2025-09-26 | C16, C12 | 0 |
+| C18 | Finishing | Final Inspection | 2025-09-29 | 2025-09-29 | C17 | 0 |
+| C19 | Finishing | Certificate of Occupancy | 2025-10-06 | 2025-10-06 | C18 | 0 |
 
 ### Key Features Demonstrated
 
@@ -274,42 +274,207 @@ Go Live Target = DATE(2025, 4, 14)
 
 ## Formatting Options Reference
 
-### Task Bars
+All numeric and color options support **conditional formatting**, allowing you to set values based on data fields.
+
+### Style Presets
+
 | Setting | Description | Default |
 |---------|-------------|---------|
-| Show | Display task bars | On |
-| Use theme color palette | Auto-assign colors by category | Off |
-| Fill color | Bar fill color | #0078D4 |
+| Layout preset | Quick style presets for bar height, spacing, and corner radius | Default |
+
+Available presets:
+
+- **Default** - Standard sizing (bar height 24px, spacing 8px, corner radius 8px)
+- **Compact** - Reduced sizing for more tasks (bar height 18px, spacing 4px, corner radius 6px)
+- **Very Compact** - Minimal sizing for dense views (bar height 14px, spacing 2px, corner radius 4px)
+- **Spacious** - Larger sizing for presentations (bar height 32px, spacing 12px, corner radius 10px)
+- **Custom** - Use your own settings
+
+*Note: When you select a preset and then manually change bar height, spacing, or corner radius, the preset automatically switches to "Custom" to preserve your changes.*
+
+### Task Bars
+
+#### Color Group
+
+| Setting | Description | Default |
+|---------|-------------|---------|
+| Use theme colors | Auto-assign colors from Power BI theme based on category | Off |
+| Fill color | Bar fill color | #0f6cbd |
 | Opacity | Bar transparency (0-100%) | 100% |
+
+#### Border Group
+
+| Setting | Description | Default |
+|---------|-------------|---------|
 | Show border | Display bar border | Off |
-| Border color | Border color | #005A9E |
-| Border width | Border thickness (px) | 1 |
-| Bar height | Height of bars (px) | 20 |
-| Corner radius | Rounded corners (px) | 4 |
-| Row spacing | Space between rows (px) | 8 |
-| Show duration on bars | Display duration text | Off |
-| Highlight slipped tasks | Color tasks pushed by dependencies | On |
-| Slipped color | Color for slipped tasks | #FFA500 |
+| Border color | Border color | #0e4775 |
+| Border width | Border thickness (0-5 px) | 1 |
+
+#### Size Group
+
+| Setting | Description | Default |
+|---------|-------------|---------|
+| Bar height | Height of bars (10-50 px) | 24 |
+| Corner radius | Rounded corners (0-20 px) | 8 |
+| Row spacing | Space between rows (0-20 px) | 4 |
+
+#### Duration Label Group
+
+| Setting | Description | Default |
+|---------|-------------|---------|
+| Show duration | Display duration text on bars | On |
+| Font | Font family, size (6-24), bold, italic, underline | Segoe UI, 11pt, Bold |
+| Color | Duration text color | #ffffff |
+| Auto-contrast | Automatically adjust duration label color for contrast with task bar color | On |
+
+#### Slipped Tasks Group
+
+| Setting | Description | Default |
+|---------|-------------|---------|
+| Slipped color | Color for tasks pushed by dependencies | #c4314b |
+
+*Note: Use the Slippage toggle button at the bottom of the chart to enable/disable highlighting.*
+
+#### Progress Group
+
+| Setting | Description | Default |
+|---------|-------------|---------|
+| Show progress | Display progress bar overlay | On |
+| Input format | How progress values are provided (0-100 or 0%-100%) | Whole number (0-100) |
+| Color | Progress bar color | #ffffff |
+| Opacity | Progress bar transparency (10-100%) | 40% |
+| Bar height % | Height as percentage of task bar (20-100%) | 100% |
+| Pattern | Fill pattern (Solid, Diagonal stripes, Dots, Crosshatch, Horizontal lines) | Solid |
 
 ### Milestones
+
 | Setting | Description | Default |
 |---------|-------------|---------|
-| Show | Display milestones | On |
-| Shape | Diamond or circle | Diamond |
-| Color | Milestone fill color | #D83B01 |
-| Size | Milestone size (px) | 12 |
+| Shape | Diamond, Circle, Square, Triangle, or Star | Diamond |
+| Milestone color | Fill color | #c4314b |
+| Milestone size | Size in pixels (6-24 px) | 12 |
+
+### Task Labels
+
+| Setting | Description | Default |
+|---------|-------------|---------|
+| Show | Display task labels | On |
+| Font | Font family, size (8-24), bold, italic, underline | Segoe UI, 12pt |
+| Color | Text color | #242424 |
+| Auto-contrast | Automatically adjust label color for contrast with task bar color | On |
+| Max width | Maximum width in pixels (50-500 px) | 140 |
+| Word wrap | Wrap long names to multiple lines | Off |
+| Selection highlight color | Background color when task is selected | #ebf3fc |
+
+### Grid Lines
+
+#### Vertical Grid Lines Group
+
+| Setting | Description | Default |
+|---------|-------------|---------|
+| Show vertical grid lines | Display vertical grid lines | On |
+| Line color | Grid line color | #e0e0e0 |
+| Line style | Solid, Dashed, or Dotted | Dashed |
+
+#### Label Divider Group
+
+| Setting | Description | Default |
+|---------|-------------|---------|
+| Show divider line | Vertical line separating labels from chart | On |
+| Divider color | Divider line color | #e0e0e0 |
+| Divider width | Divider thickness (1-5 px) | 1 |
+| Divider style | Solid, Dashed, or Dotted | Solid |
+
+#### Row Banding Group
+
+| Setting | Description | Default |
+|---------|-------------|---------|
+| Show row banding | Display alternating row colors | On |
+| Even row color | Background color for even rows | #ffffff |
+| Odd row color | Background color for odd rows | #f9f9f9 |
+
+#### Day Shading Group
+
+| Setting | Description | Default |
+|---------|-------------|---------|
+| Shade weekends | Highlight Saturday and Sunday | Off |
+| Shade specific days | Comma-separated day names (e.g., Monday, Friday) | (empty) |
+| Shade color | Background color for shaded days | #f0f0f0 |
+| Shade opacity | Transparency (10-100%) | 30% |
+
+### Date Header
+
+| Setting | Description | Default |
+|---------|-------------|---------|
+| Show | Display date header | On |
+| Font | Font family, size (10-24), bold, italic, underline | Segoe UI, 14pt |
+| Color | Text color | #242424 |
+
+### Dependency Lines
+
+| Setting | Description | Default |
+|---------|-------------|---------|
+| Show | Display dependency arrows | On |
+| Line color | Dependency line color | #616161 |
+| Line width | Line thickness (1-5 px) | 1 |
+| Line style | Solid, Dashed, or Dotted | Solid |
+| Path style | Curved, Straight (elbow), or Straight down | Straight down |
+| Arrow size | Size of arrowhead (4-16 px) | 8 |
 
 ### Critical Path
+
 | Setting | Description | Default |
 |---------|-------------|---------|
-| Show | Highlight critical path | On |
-| Color | Critical path border color | #D13438 |
-| Border width | Critical path border (px) | 3 |
-| Show summary | Display critical path stats | On |
+| Border color | Highlight border color | #c4314b |
+| Border width | Highlight border thickness (1-6 px) | 2 |
+| Show duration summary | Display critical path stats | On |
+
+*Note: Use the Critical Path toggle button at the bottom of the chart to enable/disable highlighting.*
+
+### Categories
+
+| Setting | Description | Default |
+|---------|-------------|---------|
+| Show | Display category groupings | On |
+| Header font | Font family, size (10-24), bold, italic, underline | Segoe UI, 13pt, Bold |
+| Header color | Category header text color | #424242 |
+| Start expanded | Categories expanded by default | On |
+
+### Today Line
+
+| Setting | Description | Default |
+|---------|-------------|---------|
+| Show | Display today marker line | On |
+| Line color | Marker line color | #c4314b |
+| Line width | Line thickness (1-6 px) | 2 |
+| Line style | Solid, Dashed, or Dotted | Solid |
+| Show label | Display label above line | On |
+| Label text | Text to display | Today |
+| Day offset | Shift marker by days (-365 to 365) | 0 |
 
 ## Version History
 
+### Version 2.2.0.0
+
+- Added auto-contrast for duration labels (automatically adjusts text color based on bar color for better visibility)
+- Added category summary bar tooltip showing task count, start/end dates, and total duration
+- Added tooltip headers to distinguish between Task, Milestone, and Category Summary tooltips
+- Added hover tooltips on task labels and category labels to show full names (useful for truncated text)
+- Simplified style preset logic for more stable rendering during resize and toggle interactions
+- Fixed preset switching issue when using on-visual toggles (Critical Path, Slippage)
+- Removed auto-contrast from task labels (labels are on row background, not bars)
+- Various stability improvements
+
+### Version 2.1.0.0
+
+- Added style presets (Default, Compact, Very Compact, Spacious, Custom)
+- Added slippage toggle button with summary display
+- Added progress format option (whole number vs percentage)
+- Added conditional formatting support for all numeric and color options
+- Updated localization for all new features
+
 ### Version 2.0.2.0
+
 - Added Progress % field for task completion tracking
 - Added Marker Dates field for custom vertical marker lines (supports multiple measures)
 - Added Today Line with configurable offset, style, and label
@@ -317,6 +482,7 @@ Go Live Target = DATE(2025, 4, 14)
 - Improved label truncation with configurable width
 
 ### Version 2.0.0.0
+
 - Added localization support (EN, ES, FR, DE, PT-BR)
 - Added rendering events for certification
 - Added multi-visual selection support
@@ -328,6 +494,7 @@ Go Live Target = DATE(2025, 4, 14)
 - Enhanced accessibility features
 
 ### Version 1.0.0.0
+
 - Initial release
 - Basic Gantt chart functionality
 - Dependency arrows
@@ -337,10 +504,12 @@ Go Live Target = DATE(2025, 4, 14)
 
 ## Support
 
-For issues, feature requests, or questions:
-- **Website**: https://datazoepowerbi.com
-- **Email**: zoe@datazoepowerbi.com
+This is offered as-is and without warranty. For issues, feature requests, or questions:
+
+- **Website**: <https://datazoepowerbi.com>
+- **Email**: <zoe@datazoepowerbi.com>
 
 ## License
 
 MIT License - See LICENSE file for details.
+
