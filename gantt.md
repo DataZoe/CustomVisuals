@@ -25,8 +25,6 @@ A Gantt chart is a horizontal bar chart used in project management to visualize 
 
 Explore the Gantt chart visual in action:
 
-<iframe title="Gantt Chart Demo" width="100%" height="500" src="https://app.powerbi.com/view?r=eyJrIjoiYmFhYTMyOTItOTJkYS00MTA2LWE4YzItMWI3ZGJmOGI2OWU2IiwidCI6IjkyOWVlMzI0LTk3YzQtNDk1YS04MjM5LTZhZDg3NDk0MGVlYyIsImMiOjN9&embedImagePlaceholder=true" frameborder="0" allowFullScreen="true"></iframe>
-
 [View full demo in Power BI](https://app.powerbi.com/view?r=eyJrIjoiYmFhYTMyOTItOTJkYS00MTA2LWE4YzItMWI3ZGJmOGI2OWU2IiwidCI6IjkyOWVlMzI0LTk3YzQtNDk1YS04MjM5LTZhZDg3NDk0MGVlYyIsImMiOjN9&embedImagePlaceholder=true)
 
 ## Key Benefits
