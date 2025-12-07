@@ -460,6 +460,12 @@ Available presets:
 
 ## Version History
 
+### Version 2.2.1.0
+
+**High Contrast Mode Enhancements:**
+
+- Landing page now uses high contrast colors when HC mode is active
+
 ### Version 2.2.0.0
 
 - Added auto-contrast for duration labels (automatically adjusts text color based on bar color for better visibility)
