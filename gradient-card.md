@@ -325,12 +325,47 @@ Show headcount, turnover, satisfaction scores with department categories creatin
 
 ## 7. Version History
 
-| Version | Date | Changes |
-|---------|------|---------|
-| 1.2.4.0 | Dec 2025 | High-contrast mode, keyboard navigation, three-tier progress system (below marker/above marker/100%), card border options, customizable variance labels |
-| 1.2.3.0 | Dec 2025 | Field parameter support for Primary and Comparison fields |
+### Version 1.2.5.0 (Dec 2025)
+
+**Certification & API Compliance:**
+
+- Implemented Rendering Events API (renderingStarted/renderingFinished/renderingFailed) for Power BI certification
+- Implemented Display Warning Icon for negative primary values and zero target values
+- Implemented Local Storage API v2 with privileges declaration for persistent user preferences
+- Updated visual icon to match landing page design
+
+**High Contrast Mode Enhancements:**
+
+- Landing page now uses high contrast colors when HC mode is active
+- Fixed duplicate capabilities.json entries causing landing page warning
+
+### Version 1.2.4.0 (Dec 2025)
+
+- High-contrast mode support
+- Keyboard navigation
+- Three-tier progress system (below marker/above marker/100%)
+- Card border options
+- Customizable variance labels
+
+### Version 1.2.3.0 (Dec 2025)
+
+- Field parameter support for Primary and Comparison fields
 
 ---
 
-**Author:** Zoe Douglas  
-**Support:** https://datazoepowerbi.com
+## Support
+
+For issues, feature requests, or questions:
+
+- **Website**: <https://datazoepowerbi.com>
+- **Email**: <zoe@datazoepowerbi.com>
+
+## Acknowledgments
+
+This visual and documentation were created with the assistance of GitHub Copilot.
+
+**Inspiration:** This visual was inspired by [Charles Edward's SVG card concept](https://www.linkedin.com/posts/edward-charles-085025b1_last-weekend-i-spoke-with-adrian-liu-about-activity-7400397799328083968-l04h). Thank you Charles for sharing your creative approach!
+
+## License
+
+MIT License - See LICENSE file for details.
