@@ -374,6 +374,20 @@ data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAYAAABw4pVUAAAACXBIWXMAAA
 
 ## Version History
 
+### Version 1.0.2.0
+
+**High Contrast Mode Enhancements:**
+
+- **Patterns**: Patterns now work in high contrast mode using the HC foreground color at 100% opacity
+- **Preset Images**: All 20 preset images now have high contrast versions using only HC foreground/background colors (simplified line art versions)
+- **Custom Images**: Custom image URLs are skipped in HC mode (no accessible alternative available)
+- **Borders**: Borders always use HC foreground color regardless of auto-match settings
+- **Rounded Corners**: Proper HC outline path ensures rounded corners are visible without borders enabled
+- **Gridlines**: Improved visibility with thicker lines (1.5px), larger dash pattern (5,5), and 70% opacity
+- **Landing Page**: Landing page uses HC colors when high contrast mode is active
+- **Data Labels**: Text uses HC foreground color
+- **Axis Labels**: X and Y axis text uses HC foreground color
+
 ### Version 1.0.1.0
 
 - Removed Charts preset
