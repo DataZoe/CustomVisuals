@@ -183,6 +183,34 @@ When your data contains more words than the **Max words** setting allows, the vi
 
 The visual displays a word count label (e.g., "Showing 300 of 500 words") when words are excluded.
 
+#### DAX Table to Demonstrate Word Selection
+
+This table generates 500 words with descending values. With the default **Max words = 300**, only "Word_001" through "Word_300" will appear (the highest values). "Word_301" through "Word_500" will be excluded.
+
+```dax
+Word Selection Demo = 
+VAR WordCount = 500
+VAR Numbers = GENERATESERIES(1, WordCount, 1)
+RETURN
+ADDCOLUMNS(
+    Numbers,
+    "Word", "Word_" & FORMAT([Value], "000"),
+    "Importance", WordCount - [Value] + 1
+)
+```
+
+| Word | Importance | Displayed? |
+|------|------------|------------|
+| Word_001 | 500 | ✅ Yes (rank 1) |
+| Word_002 | 499 | ✅ Yes (rank 2) |
+| ... | ... | ... |
+| Word_300 | 201 | ✅ Yes (rank 300) |
+| Word_301 | 200 | ❌ No (exceeds max) |
+| ... | ... | ... |
+| Word_500 | 1 | ❌ No |
+
+**To test:** Drag **Word** to Words and **Importance** to Values. Then adjust **Max words** in the Layout settings to see different words appear/disappear.
+
 ### Split Text
 - Break phrases into individual words
 - Custom delimiters
@@ -242,6 +270,7 @@ English, German, Spanish, French, Japanese, Portuguese (Brazil), Chinese (Simpli
 
 ### 1.0.0.0
 - Initial release
+
 
 
 
