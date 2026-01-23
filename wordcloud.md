@@ -2,64 +2,76 @@
 
 A beautiful, modern word cloud visualization for Power BI with Fluent 2 design system styling.
 
-## Features
+## Why Use This Visual?
 
-### Fluent 2 Design
-- Clean, modern aesthetic following Microsoft's Fluent 2 design language
-- Smooth animations and hover effects
-- Subtle shadows and rounded corners
-- High contrast mode support for accessibility
-- Keyboard navigation support
+### Make Your Data Memorable
+Transform boring lists and categories into eye-catching word clouds that instantly communicate what matters most. Large words grab attention, making it easy for report viewers to identify top performers, trending topics, or key themes at a glance.
 
-### Color Schemes
-- **Report Theme** - Uses your report's theme colors
-- **Fluent 2** - Official Fluent 2 color palette
-- **Brand Blue** - Microsoft brand colors
-- **Cool Tones** - Blues, greens, and purples
-- **Warm Tones** - Oranges, reds, and yellows
-- **Rainbow** - Full spectrum colors
-- **Monochrome** - Grayscale palette
-- **From Image** - Extract colors from a base64 image
-- **Custom** - Define your own 5 colors
+### Match Your Brand
+Choose from 9 color schemes including your report theme colors, or extract colors directly from your company logo or brand image. Your word clouds will look like they belong in your reports, not like an afterthought.
 
-### Word Layout Options
-- **Layout Types**: Archimedean, Rectangular, Compact, Centered, or Random scatter
-- **Rotation**: Horizontal, Vertical, Mixed (0° & 90°), Diagonal (±45°), Slight (±15°), Angled (±60°), or Any angle (360°)
-- **Font Scaling**: Configurable min/max font sizes
-- **Word Limit**: Control maximum number of words displayed
-- **Phrase Splitting**: Break multi-word phrases into individual words
-- **Word Filtering**: Exclude specific words, set minimum word length
+### Keep It Clean
+Built with Microsoft's Fluent 2 design language, this visual looks polished and professional. Subtle shadows, smooth animations, and modern typography ensure your reports feel cohesive and up-to-date.
 
-### Interactivity
-- Click to select words and cross-filter other visuals
-- Ctrl/Cmd + Click for multi-select
-- Right-click context menu for additional options
-- Hover effects with scaling
-- Rich tooltips with custom data
-- Keyboard navigation (Tab, Enter, Space, Escape)
+### Works for Everyone
+Full accessibility support means all your report users can interact with the visual—keyboard navigation, screen reader support, and high contrast mode are built in, not bolted on.
 
-### Customization
-- Background color (word colors auto-adjust for readability)
-- Border styling (color, width, radius)
-- Shadow effects
-- Animation speed
-- Padding and spacing
+### Tell a Richer Story
+Add tooltips to show additional context when users hover over words. Connect your word cloud to other visuals with cross-filtering so clicking a word updates your entire report.
 
-### Accessibility
-- Full keyboard navigation support
-- High contrast mode compatible
-- ARIA labels for screen readers
-- Automatic color contrast adjustment
+## Example Data
 
-### Localization
-Supported languages:
-- English (en-US)
-- German (de-DE)
-- Spanish (es-ES)
-- French (fr-FR)
-- Japanese (ja-JP)
-- Portuguese - Brazil (pt-BR)
-- Chinese - Simplified (zh-CN)
+Here's sample data showing product feedback categories and their mention counts:
+
+| Feedback Topic | Mentions | Sentiment Score |
+|----------------|----------|-----------------|
+| Easy to use | 847 | 4.8 |
+| Fast delivery | 623 | 4.6 |
+| Great value | 589 | 4.5 |
+| Quality product | 534 | 4.7 |
+| Helpful support | 412 | 4.4 |
+| Good packaging | 387 | 4.2 |
+| Clear instructions | 298 | 4.1 |
+| Durable | 276 | 4.3 |
+| Lightweight | 234 | 4.0 |
+| Stylish design | 198 | 4.2 |
+| Eco friendly | 167 | 4.5 |
+| Quick setup | 145 | 4.3 |
+| Compact size | 132 | 3.9 |
+| Long battery | 98 | 4.1 |
+| Quiet operation | 87 | 4.0 |
+
+### DAX Table Example
+
+Create this sample data directly in Power BI using DAX:
+
+```dax
+Feedback Data = 
+SELECTCOLUMNS(
+    {
+        ("Easy to use", 847, 4.8),
+        ("Fast delivery", 623, 4.6),
+        ("Great value", 589, 4.5),
+        ("Quality product", 534, 4.7),
+        ("Helpful support", 412, 4.4),
+        ("Good packaging", 387, 4.2),
+        ("Clear instructions", 298, 4.1),
+        ("Durable", 276, 4.3),
+        ("Lightweight", 234, 4.0),
+        ("Stylish design", 198, 4.2),
+        ("Eco friendly", 167, 4.5),
+        ("Quick setup", 145, 4.3),
+        ("Compact size", 132, 3.9),
+        ("Long battery", 98, 4.1),
+        ("Quiet operation", 87, 4.0)
+    },
+    "Feedback Topic", [Value1],
+    "Mentions", [Value2],
+    "Sentiment Score", [Value3]
+)
+```
+
+Then drag **Feedback Topic** to Words, **Mentions** to Values, and **Sentiment Score** to Tooltips.
 
 ## Data Fields
 
@@ -78,60 +90,68 @@ Supported languages:
 
 ## Format Options
 
-### Appearance
-- Background color (word colors auto-adjust for readability)
-- Corner radius
-- Padding
-- Border (show/hide, width, color)
-- Shadow effect
+### Text
+- Minimum and maximum font sizes
+- Font family selection
 
-### Words
-- Minimum font size
-- Maximum font size
-- Font family
+### Layout
 - Layout type (Archimedean, Rectangular, Compact, Centered, Random scatter)
-- Rotation style
+- Rotation style (Horizontal, Vertical, Mixed, Diagonal, Slight, Angled, Any angle)
 - Word spacing
-- Maximum words
-- Split phrases into words
-- Word delimiters
-- Minimum word length
-- Exclude words (comma-separated list)
+- Maximum words to display
+
+### Split Text
+- Break phrases into individual words
+- Custom delimiters
+- Minimum word length filter
+- Exclude specific words
 
 ### Colors
-- Color scheme selection
-- Image data URI (for extracting colors from images)
-- Colors to extract (2-12)
-- Custom color palette (5 colors)
+- 9 color schemes (Report theme, Fluent 2, Brand blue, Cool/Warm tones, Rainbow, Monochrome, From image, Custom)
+- Extract colors from images via base64 data URI
+- Define custom 5-color palettes
 
 ### Animation
 - Enable/disable animations
-- Animation duration (100-3000ms)
-- Hover scale effect (100-150%)
+- Animation duration
+- Hover scale effect
+
+### Plot Area Background
+- Background color (supports transparent)
+- Corner radius and padding
+- Border styling
+- Shadow effect
+
+## Accessibility
+
+- Full keyboard navigation (Tab, Enter, Space, Escape)
+- High contrast mode support
+- ARIA labels for screen readers
+- Automatic color contrast adjustment
+
+## Supported Languages
+
+English, German, Spanish, French, Japanese, Portuguese (Brazil), Chinese (Simplified)
 
 ## Version History
+
+### 1.0.3.0
+- Reorganized format pane (Text, Layout, Split text cards)
+- Added transparent background support
+- Added toggle to show/hide extracted colors
+- Renamed Appearance to Plot area background
 
 ### 1.0.2.0
 - Added localization support (7 languages)
 - Added keyboard navigation and accessibility features
 - Added context menu support
-- Fixed linter errors (security improvements)
 - Updated documentation
-- New simplified icon design
 
 ### 1.0.1.0
-- Added "From image" color extraction with base64 data URIs
-- Added phrase splitting feature
-- Added word exclusion and filtering options
+- Added "From image" color extraction
+- Added phrase splitting and word filtering
 - Added Report Theme color scheme
-- Added more layout options (Compact, Centered, Random scatter)
-- Added more rotation options
-- Improved high contrast mode support
-- Sentence case labels with descriptive tooltips
+- Added more layout and rotation options
 
 ### 1.0.0.0
 - Initial release
-- Fluent 2 design implementation
-- Multiple color schemes
-- Animation support
-- High contrast mode
