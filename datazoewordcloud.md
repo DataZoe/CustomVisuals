@@ -1,6 +1,8 @@
 # DataZoe Word Cloud
 
-A beautiful, modern word cloud visualization for Power BI with Fluent 2 design system styling.
+A beautiful, modern word cloud visualization for Power BI.
+
+![DataZoe word cloud Visual in Power BI](assets/datazoewordcloud.png)
 
 ## Why Use This Visual?
 
@@ -219,3 +221,4 @@ English, German, Spanish, French, Japanese, Portuguese (Brazil), Chinese (Simpli
 
 ### 1.0.0.0
 - Initial release
+
