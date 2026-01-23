@@ -162,6 +162,27 @@ Then drag **Skill** to Words, **Proficiency** to Values, and **Team Members** to
 - Word spacing
 - Maximum words to display
 
+#### How Word Selection Works
+
+When your data contains more words than the **Max words** setting allows, the visual selects which words to display using this logic:
+
+1. **Sort by value descending** – Words with the highest values appear first
+2. **Take the top N** – Only the first N words (based on Max words setting) are included
+
+| Example | Value | Included? |
+|---------|-------|-----------|
+| "sales" | 1500 | ✅ (rank 1) |
+| "revenue" | 1200 | ✅ (rank 2) |
+| ... | ... | ... |
+| "misc" | 50 | ✅ (rank 300) |
+| "other" | 45 | ❌ (rank 301) |
+
+**What determines value?**
+- **With a Values measure:** Uses the aggregated measure value for each word
+- **Without a Values measure:** Each word counts as 1, so frequency determines ranking
+
+The visual displays a word count label (e.g., "Showing 300 of 500 words") when words are excluded.
+
 ### Split Text
 - Break phrases into individual words
 - Custom delimiters
@@ -221,5 +242,6 @@ English, German, Spanish, French, Japanese, Portuguese (Brazil), Chinese (Simpli
 
 ### 1.0.0.0
 - Initial release
+
 
 
