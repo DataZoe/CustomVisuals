@@ -73,6 +73,58 @@ SELECTCOLUMNS(
 
 Then drag **Feedback Topic** to Words, **Mentions** to Values, and **Sentiment Score** to Tooltips.
 
+---
+
+## Example 2: Skills & Expertise
+
+Visualize team skills or job requirements with weighted proficiency levels:
+
+| Skill | Proficiency | Team Members |
+|-------|-------------|--------------|
+| Python | 95 | 12 |
+| SQL | 92 | 15 |
+| Power BI | 88 | 10 |
+| Excel | 85 | 18 |
+| Data Analysis | 82 | 14 |
+| Machine Learning | 78 | 6 |
+| Azure | 75 | 8 |
+| Tableau | 70 | 5 |
+| R | 68 | 4 |
+| JavaScript | 65 | 7 |
+| Spark | 60 | 3 |
+| Docker | 55 | 4 |
+| Kubernetes | 50 | 2 |
+
+### DAX Table Example
+
+```dax
+Skills Data = 
+SELECTCOLUMNS(
+    {
+        ("Python", 95, 12),
+        ("SQL", 92, 15),
+        ("Power BI", 88, 10),
+        ("Excel", 85, 18),
+        ("Data Analysis", 82, 14),
+        ("Machine Learning", 78, 6),
+        ("Azure", 75, 8),
+        ("Tableau", 70, 5),
+        ("R", 68, 4),
+        ("JavaScript", 65, 7),
+        ("Spark", 60, 3),
+        ("Docker", 55, 4),
+        ("Kubernetes", 50, 2)
+    },
+    "Skill", [Value1],
+    "Proficiency", [Value2],
+    "Team Members", [Value3]
+)
+```
+
+Then drag **Skill** to Words, **Proficiency** to Values, and **Team Members** to Tooltips.
+
+---
+
 ## Data Fields
 
 | Field | Type | Description |
@@ -134,6 +186,10 @@ Then drag **Feedback Topic** to Words, **Mentions** to Values, and **Sentiment S
 English, German, Spanish, French, Japanese, Portuguese (Brazil), Chinese (Simplified)
 
 ## Version History
+
+### 1.0.4.0
+- Improved responsive scaling - word cloud now fills the visual better when resized
+- Added toggle to show/hide extracted colors
 
 ### 1.0.3.0
 - Reorganized format pane (Text, Layout, Split text cards)
