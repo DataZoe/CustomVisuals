@@ -2,9 +2,13 @@
 
 A powerful, feature-rich Gantt chart custom visual for Microsoft Power BI that helps you visualize project timelines, track task dependencies, and identify critical paths.
 
-![Gantt Chart Visual](assets/gantt-icon.png)
+![Gantt Chart Visual](icon.png)
 
-This doc and the visual were created with Copilot in VS Code.
+## Live Demo
+
+[![View Live Demo](https://img.shields.io/badge/View%20Live%20Demo-Power%20BI-F2C811?style=for-the-badge&logo=powerbi)](https://app.powerbi.com/view?r=eyJrIjoiYmFhYTMyOTItOTJkYS00MTA2LWE4YzItMWI3ZGJmOGI2OWU2IiwidCI6IjkyOWVlMzI0LTk3YzQtNDk1YS04MjM5LTZhZDg3NDk0MGVlYyIsImMiOjN9)
+
+👉 **[Click here to explore the interactive Gantt chart demo](https://app.powerbi.com/view?r=eyJrIjoiYmFhYTMyOTItOTJkYS00MTA2LWE4YzItMWI3ZGJmOGI2OWU2IiwidCI6IjkyOWVlMzI0LTk3YzQtNDk1YS04MjM5LTZhZDg3NDk0MGVlYyIsImMiOjN9)**
 
 ## What is a Gantt Chart?
 
@@ -17,49 +21,49 @@ A Gantt chart is a horizontal bar chart used in project management to visualize 
 - **Where** tasks overlap
 - **The critical path** through your project
 
-![Gantt Chart Visual](assets/gantt-chart.png)
-
-![Gantt Chart Visual](assets/gantt-chart-with-critical-path.png)
-
-## Live Demo
-
-Explore the Gantt chart visual in action:
-
-[View full demo in Power BI](https://app.powerbi.com/view?r=eyJrIjoiYmFhYTMyOTItOTJkYS00MTA2LWE4YzItMWI3ZGJmOGI2OWU2IiwidCI6IjkyOWVlMzI0LTk3YzQtNDk1YS04MjM5LTZhZDg3NDk0MGVlYyIsImMiOjN9&embedImagePlaceholder=true)
-
 ## Key Benefits
 
 ### 📊 Visual Project Timeline
+
 See your entire project at a glance with tasks displayed on a timeline. Quickly identify scheduling conflicts, gaps, and resource allocation issues.
 
 ### 🔗 Dependency Tracking
+
 Define task dependencies to visualize which tasks must complete before others can begin. Dependency arrows show the flow of work through your project.
 
 ### 🚨 Critical Path Analysis
+
 Automatically identifies and highlights the critical path—the longest sequence of dependent tasks that determines the minimum project duration. Any delay on critical path tasks delays the entire project.
 
 ### ⚠️ Slipped Task Detection
+
 Tasks that have been pushed past their original dates due to dependencies are automatically highlighted, making it easy to identify schedule impacts.
 
 ### 🎯 Milestone Support
+
 Tasks without an end date (or with the same start and end date) are displayed as diamond-shaped milestones, perfect for marking key project deliverables.
 
 ### 📈 Progress Tracking
+
 Add a Progress % field to show task completion as an overlay bar on each task. The progress bar fills from left to right based on the percentage (0-100).
 
 ### 📍 Custom Marker Lines
+
 Add one or more date measures to display vertical marker lines on the chart. Perfect for deadlines, milestones, phase gates, or any significant dates. Each marker shows the measure name as a label.
 
 ### 📁 Category Grouping
+
 Organize tasks into collapsible categories for better organization of large projects. Summary bars show the span of each category.
 
 ### ♿ Accessibility Features
+
 - Full keyboard navigation support
 - High-contrast mode compatibility
 - Screen reader friendly with ARIA attributes
 - Multi-language localization (English, Spanish, French, German, Portuguese)
 
 ### 🎨 Extensive Customization
+
 - Theme color palette integration
 - Customizable bar colors, borders, and opacity
 - Adjustable fonts, sizes, and spacing
@@ -83,6 +87,7 @@ Organize tasks into collapsible categories for better organization of large proj
 ## How to Use
 
 ### Step 1: Add the Visual to Your Report
+
 1. In Power BI Desktop, go to the **Visualizations** pane
 2. Click the **...** (more options) button
 3. Select **Import a visual from a file**
@@ -90,17 +95,21 @@ Organize tasks into collapsible categories for better organization of large proj
 5. The Gantt chart icon will appear in your visualizations pane
 
 ### Step 2: Prepare Your Data
+
 Your data should be in a table format with at minimum:
+
 - A column for task names
 - A column for start dates
 
 Optionally include:
+
 - End dates
 - Task IDs (for dependencies)
 - Dependencies (referencing Task IDs)
 - Categories
 
 ### Step 3: Add Data to the Visual
+
 1. Click the Gantt chart visual to select it
 2. Drag your fields to the appropriate data wells:
    - **Task**: Your task name column
@@ -111,6 +120,7 @@ Optionally include:
    - **Category**: Your category/phase column (optional)
 
 ### Step 4: Customize Appearance
+
 1. With the visual selected, click the **Format** pane (paint roller icon)
 2. Expand the formatting cards to customize:
    - **Task bars**: Colors, borders, opacity, height
@@ -122,6 +132,7 @@ Optionally include:
    - **Categories**: Header color, expand/collapse behavior
 
 ### Step 5: Interact with the Chart
+
 - **Click** a task to select it and cross-filter other visuals
 - **Ctrl+Click** to select multiple tasks
 - **Click** category headers to expand/collapse groups
@@ -189,15 +200,50 @@ Go Live Target = DATE(2025, 4, 14)
    - Dependency arrows connect related tasks
    - The critical path is highlighted
 
-5. **Toggle the Critical Path:**
+6. **Toggle the Critical Path:**
    - Click the "Critical Path" toggle button in the chart header
    - Tasks on the critical path are highlighted with a colored border
    - The summary shows total critical path duration
 
-6. **Explore the categories:**
+7. **Explore the categories:**
    - Click the ▼ arrow next to "Development" to collapse that section
    - Click again to expand
    - Notice the summary bar showing the category's time span
+
+### DAX Calculated Table
+
+Alternatively, create the sample data directly in Power BI using a DAX calculated table:
+
+```dax
+SoftwareProject = 
+VAR TaskTable = 
+    {
+        ( 1, "Project Kickoff", "Planning", DATE(2025,1,6), DATE(2025,1,6), 100, "" ),
+        ( 2, "Requirements Gathering", "Planning", DATE(2025,1,7), DATE(2025,1,17), 100, "1" ),
+        ( 3, "Technical Specification", "Planning", DATE(2025,1,13), DATE(2025,1,24), 75, "2" ),
+        ( 4, "Architecture Review", "Planning", DATE(2025,1,27), DATE(2025,1,27), 0, "3" ),
+        ( 5, "Database Design", "Development", DATE(2025,1,28), DATE(2025,2,7), 50, "4" ),
+        ( 6, "API Development", "Development", DATE(2025,2,3), DATE(2025,2,21), 25, "5" ),
+        ( 7, "Frontend Development", "Development", DATE(2025,2,10), DATE(2025,2,28), 10, "5" ),
+        ( 8, "Integration", "Development", DATE(2025,2,24), DATE(2025,3,7), 0, "6,7" ),
+        ( 9, "Unit Testing", "Testing", DATE(2025,2,17), DATE(2025,3,7), 0, "6" ),
+        ( 10, "Integration Testing", "Testing", DATE(2025,3,10), DATE(2025,3,21), 0, "8,9" ),
+        ( 11, "User Acceptance Testing", "Testing", DATE(2025,3,24), DATE(2025,4,4), 0, "10" ),
+        ( 12, "Production Deployment", "Deployment", DATE(2025,4,7), DATE(2025,4,11), 0, "11" ),
+        ( 13, "Go Live", "Deployment", DATE(2025,4,14), DATE(2025,4,14), 0, "12" )
+    }
+RETURN
+    SELECTCOLUMNS(
+        TaskTable,
+        "Task ID", [Value1],
+        "Task", [Value2],
+        "Category", [Value3],
+        "Start", [Value4],
+        "End", [Value5],
+        "Progress", [Value6],
+        "Dependencies", [Value7]
+    )
+```
 
 ## Example: Marketing Campaign
 
@@ -225,6 +271,39 @@ Go Live Target = DATE(2025, 4, 14)
 - **Creative** tasks can run in parallel after Concept Development
 - The critical path likely runs through the longest creative task (Video Production)
 - **Soft Launch** depends on multiple tasks completing
+
+### DAX Calculated Table
+
+```dax
+MarketingCampaign = 
+VAR TaskTable = 
+    {
+        ( "M1", "Campaign Brief", "Strategy", DATE(2025,2,3), DATE(2025,2,7), 100, "" ),
+        ( "M2", "Target Audience Research", "Strategy", DATE(2025,2,10), DATE(2025,2,14), 100, "M1" ),
+        ( "M3", "Budget Approval", "Strategy", DATE(2025,2,17), DATE(2025,2,17), 100, "M2" ),
+        ( "M4", "Concept Development", "Creative", DATE(2025,2,18), DATE(2025,2,28), 80, "M3" ),
+        ( "M5", "Copywriting", "Creative", DATE(2025,2,24), DATE(2025,3,7), 60, "M4" ),
+        ( "M6", "Design Assets", "Creative", DATE(2025,2,24), DATE(2025,3,14), 45, "M4" ),
+        ( "M7", "Video Production", "Creative", DATE(2025,3,3), DATE(2025,3,21), 30, "M4" ),
+        ( "M8", "Landing Page", "Digital", DATE(2025,3,10), DATE(2025,3,21), 15, "M5,M6" ),
+        ( "M9", "Email Templates", "Digital", DATE(2025,3,10), DATE(2025,3,17), 20, "M5" ),
+        ( "M10", "Social Media Setup", "Digital", DATE(2025,3,17), DATE(2025,3,21), 0, "M6" ),
+        ( "M11", "Soft Launch", "Launch", DATE(2025,3,24), DATE(2025,3,28), 0, "M8,M9,M10,M7" ),
+        ( "M12", "Full Campaign Launch", "Launch", DATE(2025,3,31), DATE(2025,3,31), 0, "M11" ),
+        ( "M13", "Performance Review", "Launch", DATE(2025,4,14), DATE(2025,4,18), 0, "M12" )
+    }
+RETURN
+    SELECTCOLUMNS(
+        TaskTable,
+        "Task ID", [Value1],
+        "Task", [Value2],
+        "Category", [Value3],
+        "Start", [Value4],
+        "End", [Value5],
+        "Progress", [Value6],
+        "Dependencies", [Value7]
+    )
+```
 
 ## Example: Construction Project
 
@@ -259,21 +338,119 @@ Go Live Target = DATE(2025, 4, 14)
 - **Milestone dates** for permit approval, inspection, and certificate
 - **Critical path** identifies which delays would impact completion
 
+### DAX Calculated Table
+
+```dax
+ConstructionProject = 
+VAR TaskTable = 
+    {
+        ( "C1", "Site Survey", "Permits", DATE(2025,3,3), DATE(2025,3,14), 100, "" ),
+        ( "C2", "Permit Application", "Permits", DATE(2025,3,17), DATE(2025,3,28), 100, "C1" ),
+        ( "C3", "Permit Approved", "Permits", DATE(2025,4,14), DATE(2025,4,14), 100, "C2" ),
+        ( "C4", "Excavation", "Foundation", DATE(2025,4,15), DATE(2025,4,25), 100, "C3" ),
+        ( "C5", "Foundation Pour", "Foundation", DATE(2025,4,28), DATE(2025,5,2), 100, "C4" ),
+        ( "C6", "Curing Period", "Foundation", DATE(2025,5,5), DATE(2025,5,16), 75, "C5" ),
+        ( "C7", "Framing", "Structure", DATE(2025,5,19), DATE(2025,6,13), 50, "C6" ),
+        ( "C8", "Roofing", "Structure", DATE(2025,6,16), DATE(2025,6,27), 20, "C7" ),
+        ( "C9", "Windows & Doors", "Structure", DATE(2025,6,23), DATE(2025,7,3), 10, "C7" ),
+        ( "C10", "Electrical Rough-in", "Systems", DATE(2025,6,30), DATE(2025,7,18), 0, "C8" ),
+        ( "C11", "Plumbing Rough-in", "Systems", DATE(2025,6,30), DATE(2025,7,18), 0, "C8" ),
+        ( "C12", "HVAC Installation", "Systems", DATE(2025,7,7), DATE(2025,7,25), 0, "C8" ),
+        ( "C13", "Insulation", "Interior", DATE(2025,7,21), DATE(2025,7,30), 0, "C10,C11" ),
+        ( "C14", "Drywall", "Interior", DATE(2025,8,1), DATE(2025,8,15), 0, "C13" ),
+        ( "C15", "Painting", "Interior", DATE(2025,8,18), DATE(2025,8,29), 0, "C14" ),
+        ( "C16", "Flooring", "Interior", DATE(2025,9,1), DATE(2025,9,12), 0, "C15" ),
+        ( "C17", "Fixtures & Appliances", "Finishing", DATE(2025,9,15), DATE(2025,9,26), 0, "C16,C12" ),
+        ( "C18", "Final Inspection", "Finishing", DATE(2025,9,29), DATE(2025,9,29), 0, "C17" ),
+        ( "C19", "Certificate of Occupancy", "Finishing", DATE(2025,10,6), DATE(2025,10,6), 0, "C18" )
+    }
+RETURN
+    SELECTCOLUMNS(
+        TaskTable,
+        "Task ID", [Value1],
+        "Task", [Value2],
+        "Category", [Value3],
+        "Start", [Value4],
+        "End", [Value5],
+        "Progress", [Value6],
+        "Dependencies", [Value7]
+    )
+```
+
+## DAX Table Constructor Reference
+
+Each example above includes a DAX calculated table version. Here's how to use them:
+
+### How to Create a DAX Table
+
+1. In Power BI Desktop, go to **Modeling** → **New table**
+2. Paste any of the DAX formulas from the examples above
+3. Add the Gantt visual and drag the columns to the appropriate fields:
+   - **Task** → Task
+   - **Start** → Start Date
+   - **End** → End Date
+   - **Task ID** → Task ID
+   - **Dependencies** → Dependencies
+   - **Category** → Category
+   - **Progress** → Progress %
+
+### Why Table Constructors?
+
+This approach uses table constructors `{ ( ... ), ( ... ) }` instead of `DATATABLE()` because `DATATABLE` doesn't support expressions like `DATE()`. Table constructors allow you to use any DAX expression for values, making them ideal for sample data with calculated dates.
+
+### Quick Start Example
+
+```dax
+GanttData = 
+VAR TaskTable = 
+    {
+        ( 1, "Project Kickoff", "Planning", DATE(2026,1,6), DATE(2026,1,6), 100, "" ),
+        ( 2, "Requirements Gathering", "Planning", DATE(2026,1,7), DATE(2026,1,14), 100, "1" ),
+        ( 3, "Requirements Sign-off", "Planning", DATE(2026,1,15), DATE(2026,1,15), 100, "2" ),
+        ( 4, "Design Phase", "Design", DATE(2026,1,16), DATE(2026,1,28), 75, "3" ),
+        ( 5, "UI Mockups", "Design", DATE(2026,1,20), DATE(2026,1,31), 60, "3" ),
+        ( 6, "Database Design", "Design", DATE(2026,1,22), DATE(2026,2,5), 40, "4" ),
+        ( 7, "Design Review", "Design", DATE(2026,2,6), DATE(2026,2,6), 0, "5,6" ),
+        ( 8, "Backend Development", "Development", DATE(2026,2,9), DATE(2026,2,28), 25, "7" ),
+        ( 9, "Frontend Development", "Development", DATE(2026,2,10), DATE(2026,3,10), 10, "7" ),
+        ( 10, "API Integration", "Development", DATE(2026,2,15), DATE(2026,3,5), 0, "8" ),
+        ( 11, "Code Complete", "Development", DATE(2026,3,11), DATE(2026,3,11), 0, "9,10" ),
+        ( 12, "Testing", "QA", DATE(2026,3,12), DATE(2026,3,20), 0, "11" ),
+        ( 13, "Bug Fixes", "QA", DATE(2026,3,21), DATE(2026,3,27), 0, "12" ),
+        ( 14, "Documentation", "Deployment", DATE(2026,3,12), DATE(2026,3,28), 0, "11" ),
+        ( 15, "Go Live", "Deployment", DATE(2026,3,30), DATE(2026,3,30), 0, "13,14" )
+    }
+RETURN
+    SELECTCOLUMNS(
+        TaskTable,
+        "Task ID", [Value1],
+        "Task", [Value2],
+        "Category", [Value3],
+        "Start", [Value4],
+        "End", [Value5],
+        "Progress", [Value6],
+        "Dependencies", [Value7]
+    )
+```
+
 ## Tips and Best Practices
 
 ### Data Preparation
+
 - Use consistent date formats
 - Keep Task IDs unique and simple (numbers or short codes)
 - Use comma-separated values for multiple dependencies
 - Leave End Date empty for milestones
 
 ### Visual Design
+
 - Use categories to organize large projects
 - Enable the color palette for automatic task coloring by category
 - Adjust bar height and row spacing for readability
 - Use high-contrast colors for critical path highlighting
 
 ### Interactivity
+
 - Combine with slicers to filter by date range or category
 - Use cross-filtering with other visuals for project dashboards
 - Export to PDF/PowerPoint for stakeholder presentations
@@ -290,13 +467,12 @@ All numeric and color options support **conditional formatting**, allowing you t
 
 Available presets:
 
-- **Default** - Standard sizing (bar height 24px, spacing 8px, corner radius 8px)
-- **Compact** - Reduced sizing for more tasks (bar height 18px, spacing 4px, corner radius 6px)
-- **Very Compact** - Minimal sizing for dense views (bar height 14px, spacing 2px, corner radius 4px)
+- **Default** - Compact sizing for efficient use of space (bar height 14px, spacing 2px, corner radius 4px)
+- **Comfortable** - Balanced sizing for everyday use (bar height 18px, spacing 4px, corner radius 6px)
+- **Relaxed** - More breathing room between tasks (bar height 24px, spacing 8px, corner radius 8px)
 - **Spacious** - Larger sizing for presentations (bar height 32px, spacing 12px, corner radius 10px)
-- **Custom** - Use your own settings
 
-*Note: When you select a preset and then manually change bar height, spacing, or corner radius, the preset automatically switches to "Custom" to preserve your changes.*
+*Note: After selecting a preset, you can manually adjust individual settings. The preset selection only applies values when you change it.*
 
 ### Task Bars
 
@@ -320,9 +496,9 @@ Available presets:
 
 | Setting | Description | Default |
 |---------|-------------|---------|
-| Bar height | Height of bars (10-50 px) | 24 |
-| Corner radius | Rounded corners (0-20 px) | 8 |
-| Row spacing | Space between rows (0-20 px) | 4 |
+| Bar height | Height of bars (10-50 px) | 14 |
+| Corner radius | Rounded corners (0-20 px) | 4 |
+| Row spacing | Space between rows (0-20 px) | 2 |
 
 #### Duration Label Group
 
@@ -365,7 +541,7 @@ Available presets:
 | Setting | Description | Default |
 |---------|-------------|---------|
 | Show | Display task labels | On |
-| Font | Font family, size (8-24), bold, italic, underline | Segoe UI, 12pt |
+| Font | Font family, size (8-24), bold, italic, underline | Segoe UI, 10pt |
 | Color | Text color | #242424 |
 | Auto-contrast | Automatically adjust label color for contrast with task bar color | On |
 | Max width | Maximum width in pixels (50-500 px) | 140 |
@@ -477,9 +653,17 @@ Available presets:
 - Removed auto-contrast from task labels (labels are on row background, not bars)
 - Various stability improvements
 
+### Version 2.3.0.0
+
+- Renamed style presets to Default, Comfortable, Relaxed, Spacious (removed Custom option)
+- Changed default preset to compact sizing (bar height 14px, spacing 2px, corner radius 4px)
+- Reduced default task label font size from 12pt to 10pt for better information density
+- Improved preset behavior: presets now apply values only when changed, allowing subsequent manual adjustments
+- Fixed "reset to default" behavior to correctly restore default preset values
+
 ### Version 2.1.0.0
 
-- Added style presets (Default, Compact, Very Compact, Spacious, Custom)
+- Added style presets (Default, Compact, Very Compact, Spacious)
 - Added slippage toggle button with summary display
 - Added progress format option (whole number vs percentage)
 - Added conditional formatting support for all numeric and color options
@@ -516,12 +700,15 @@ Available presets:
 
 ## Support
 
-This is offered as-is and without warranty. For issues, feature requests, or questions:
+For issues, feature requests, or questions:
 
 - **Website**: <https://datazoepowerbi.com>
 - **Email**: <zoe@datazoepowerbi.com>
 
+## Acknowledgments
+
+This visual and documentation were created with the assistance of GitHub Copilot.
+
 ## License
 
 MIT License - See LICENSE file for details.
-
