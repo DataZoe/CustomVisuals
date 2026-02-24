@@ -2,7 +2,7 @@
 
 A powerful, feature-rich Gantt chart custom visual for Microsoft Power BI that helps you visualize project timelines, track task dependencies, and identify critical paths.
 
-![Gantt Chart Visual](assets/gantt-chart.png)
+![Gantt Chart Visual](icon.png)
 
 ## Live Demo
 
@@ -539,46 +539,46 @@ RETURN
 
 ## Formatting Options Reference
 
-All numeric and color options support **conditional formatting**, allowing you to set values based on data fields.
+The format pane is organized into seven main cards. All numeric and color options support **conditional formatting**, allowing you to set values based on data fields.
 
-### Style Presets
+---
 
-| Setting | Description | Default |
-|---------|-------------|---------|
-| Layout preset | Quick style presets for bar height, spacing, and corner radius | Default |
+### 1. Layout
 
-Available presets:
-
-- **Default** - Compact sizing for efficient use of space (bar height 14px, spacing 2px, corner radius 4px)
-- **Comfortable** - Balanced sizing for everyday use (bar height 18px, spacing 4px, corner radius 6px)
-- **Relaxed** - More breathing room between tasks (bar height 24px, spacing 8px, corner radius 8px)
-- **Spacious** - Larger sizing for presentations (bar height 32px, spacing 12px, corner radius 10px)
-
-*Note: After selecting a preset, you can manually adjust individual settings. The preset selection only applies values when you change it.*
-
-### Task Bars
-
-#### Color Group
+Quick layout adjustments using presets.
 
 | Setting | Description | Default |
 |---------|-------------|---------|
-| Use theme colors | Auto-assign colors from Power BI theme based on category | Off |
-| Fill color | Bar fill color | #0f6cbd |
+| Preset | Quick style presets for bar height, spacing, and corner radius | Default |
+
+**Available presets:**
+
+| Preset | Bar Height | Row Spacing | Corner Radius |
+|--------|------------|-------------|---------------|
+| Default | 14px | 2px | 4px |
+| Comfortable | 18px | 4px | 6px |
+| Relaxed | 24px | 8px | 8px |
+| Spacious | 32px | 12px | 10px |
+
+*Note: After selecting a preset, you can manually adjust individual settings in the Bars card. The preset only applies values when you change it.*
+
+---
+
+### 2. Bars
+
+Configure task bar appearance, duration labels, progress overlays, slipped task highlighting, and milestones.
+
+#### Appearance Group
+
+| Setting | Description | Default |
+|---------|-------------|---------|
+| Theme colors | Auto-assign colors from Power BI theme based on category | Off |
+| Color | Bar fill color | #0f6cbd |
 | Opacity | Bar transparency (0-100%) | 100% |
-
-#### Border Group
-
-| Setting | Description | Default |
-|---------|-------------|---------|
-| Show border | Display bar border | Off |
-| Border color | Border color | #0e4775 |
+| Border | Display bar border | Off |
+| Border color | Border color when enabled | #0e4775 |
 | Border width | Border thickness (0-5 px) | 1 |
-
-#### Size Group
-
-| Setting | Description | Default |
-|---------|-------------|---------|
-| Bar height | Height of bars (10-50 px) | 14 |
+| Height | Height of bars (10-50 px) | 14 |
 | Corner radius | Rounded corners (0-20 px) | 4 |
 | Row spacing | Space between rows (0-20 px) | 2 |
 
@@ -586,176 +586,245 @@ Available presets:
 
 | Setting | Description | Default |
 |---------|-------------|---------|
-| Show duration | Display duration text on bars | On |
+| Duration label | Display duration text on bars | On |
 | Font | Font family, size (6-24), bold, italic, underline | Segoe UI, 11pt, Bold |
 | Color | Duration text color | #ffffff |
-| Auto-contrast | Automatically adjust duration label color for contrast with task bar color | On |
-
-#### Slipped Tasks Group
-
-| Setting | Description | Default |
-|---------|-------------|---------|
-| Slipped color | Color for tasks pushed by dependencies | #c4314b |
-
-*Note: Use the Slippage toggle button at the bottom of the chart to enable/disable highlighting.*
+| Auto-contrast | Automatically adjust text color for readability against bar color | On |
 
 #### Progress Group
 
 | Setting | Description | Default |
 |---------|-------------|---------|
-| Show progress | Display progress bar overlay | On |
-| Input format | How progress values are provided (0-100 or 0%-100%) | Whole number (0-100) |
+| Progress overlay | Display progress bar overlay on tasks | On |
+| Data format | How progress values are provided | Whole number (0-100) |
 | Color | Progress bar color | #ffffff |
 | Opacity | Progress bar transparency (10-100%) | 40% |
-| Bar height % | Height as percentage of task bar (20-100%) | 100% |
-| Pattern | Fill pattern (Solid, Diagonal stripes, Dots, Crosshatch, Horizontal lines) | Solid |
+| Height | Height as percentage of task bar (20-100%) | 100% |
+| Pattern | Fill pattern style | Solid |
 
-### Milestones
+**Data format options:**
+- **Whole number (0-100)** - Use when your data contains values like 50, 75, 100
+- **Percentage (0%-100%)** - Use when your data contains decimal values like 0.5, 0.75, 1.0
+
+**Pattern options:** Solid, Diagonal stripes, Dots, Crosshatch, Horizontal lines
+
+#### Slipped Tasks Group
 
 | Setting | Description | Default |
 |---------|-------------|---------|
-| Shape | Diamond, Circle, Square, Triangle, or Star | Diamond |
+| Slipped color | Color for tasks pushed past original dates by dependencies | #c4314b |
+
+*Use the Slippage toggle button at the bottom of the chart to enable/disable highlighting.*
+
+#### Milestones Group
+
+| Setting | Description | Default |
+|---------|-------------|---------|
+| Milestone shape | Shape for milestone markers | Diamond |
 | Milestone color | Fill color | #c4314b |
 | Milestone size | Size in pixels (6-24 px) | 12 |
 
-### Task Labels
+**Shape options:** Diamond, Circle, Square, Triangle, Star
+
+---
+
+### 3. Labels
+
+Configure task labels, timeline header, date axis settings, and context columns.
+
+#### Task Labels Group
 
 | Setting | Description | Default |
 |---------|-------------|---------|
-| Show | Display task labels | On |
+| Task labels | Display task names | On |
 | Font | Font family, size (8-24), bold, italic, underline | Segoe UI, 10pt |
 | Color | Text color | #242424 |
-| Auto-contrast | Automatically adjust label color for contrast with task bar color | On |
-| Max width | Maximum width in pixels (50-500 px) | 140 |
+| Max width | Maximum width before truncation (50-500 px) | 140 |
 | Word wrap | Wrap long names to multiple lines | Off |
-| Selection highlight color | Background color when task is selected | #ebf3fc |
+| Selection color | Background color when task is selected | #ebf3fc |
 
-### Grid Lines
-
-#### Primary Lines Group
+#### Timeline Header Group
 
 | Setting | Description | Default |
 |---------|-------------|---------|
-| Show | Display vertical lines at primary time unit intervals | On |
-| Color | Primary grid line color | #e0e0e0 |
-| Style | Solid, Dashed, or Dotted | Dashed |
-
-#### Secondary Lines Group
-
-| Setting | Description | Default |
-|---------|-------------|---------|
-| Show | Display vertical lines at secondary time unit boundaries | On |
-| Color | Secondary grid line color | #c0c0c0 |
-| Style | Solid, Dashed, or Dotted | Solid |
-
-*Note: Secondary lines only appear when a secondary unit is configured in the Date Axis settings.*
-
-#### Label Divider Group
-
-| Setting | Description | Default |
-|---------|-------------|---------|
-| Show divider line | Vertical line separating labels from chart | On |
-| Divider color | Divider line color | #e0e0e0 |
-| Divider width | Divider thickness (1-5 px) | 1 |
-| Divider style | Solid, Dashed, or Dotted | Solid |
-
-#### Row Banding Group
-
-| Setting | Description | Default |
-|---------|-------------|---------|
-| Show row banding | Display alternating row colors | On |
-| Even row color | Background color for even rows | #ffffff |
-| Odd row color | Background color for odd rows | #f9f9f9 |
-
-#### Day Shading Group
-
-| Setting | Description | Default |
-|---------|-------------|---------|
-| Shade weekends | Highlight Saturday and Sunday | Off |
-| Shade specific days | Comma-separated day names (e.g., Monday, Friday) | (empty) |
-| Shade color | Background color for shaded days | #f0f0f0 |
-| Shade opacity | Transparency (10-100%) | 30% |
-
-### Date Header
-
-| Setting | Description | Default |
-|---------|-------------|---------|
-| Show | Display date header | On |
+| Timeline header | Display date header above chart | On |
 | Font | Font family, size (10-24), bold, italic, underline | Segoe UI, 14pt |
-| Color | Text color | #242424 |
+| Header color | Text color | #242424 |
 
-### Date Axis
-
-#### Position Group
+#### Date Axis Group
 
 | Setting | Description | Default |
 |---------|-------------|---------|
 | Position | Show date axis at top, bottom, or both | Bottom |
+| Time scale | Auto or Manual mode | Auto |
+| Primary unit | Main time unit for labels and grid lines | Week |
+| Secondary unit | Optional grouping tier above/below primary labels | None |
+| Week starts on | First day of the week for week calculations | Monday |
+| Day unit min width | Minimum width per day in pixels (1-100 px) | 10 |
 
-#### Time Scale Group
+**Time scale modes:**
+- **Auto** - Intelligently selects the best time unit based on your date range
+- **Manual** - You choose the primary and secondary units
 
-| Setting | Description | Default |
-|---------|-------------|---------|
-| Time scale | Auto selects best fit based on date range; Manual lets you choose units | Auto |
-| Primary unit | Main time unit for labels and primary grid lines (Day, Week, Month, Quarter, Year) | Week |
-| Secondary unit | Optional grouping tier above/below primary labels (None, Week, Month, Quarter, Year) | None |
+**Primary/Secondary unit options:** Day, Week, Month, Quarter, Year (Secondary also has None)
 
-*Note: Primary lines appear at primary unit intervals. Secondary lines appear at secondary unit boundaries (when a secondary unit is configured).*
+**Week starts on options:** Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday
 
 **Auto mode behavior:**
-- ≤14 days: Day labels
-- ≤60 days: Week labels, Month grouping (if range > 2 weeks)
-- ≤180 days: Week or Month labels
-- ≤365 days: Month labels, Year grouping
-- >365 days: Month or Quarter labels, Year grouping
+| Date Range | Primary Unit | Secondary Unit |
+|------------|--------------|----------------|
+| ≤14 days | Day | - |
+| ≤60 days | Week | Month (if >2 weeks) |
+| ≤180 days | Week or Month | - |
+| ≤365 days | Month | Year |
+| >365 days | Month or Quarter | Year |
 
-**Example configurations:**
+**Example manual configurations:**
 - **Sprint view (2 weeks)**: Primary=Day, Secondary=Week
 - **Quarter view (3 months)**: Primary=Week, Secondary=Month
 - **Year view (12 months)**: Primary=Month, Secondary=Year
 - **Multi-year project**: Primary=Quarter, Secondary=Year
 
-### Dependency Lines
+#### Context Columns Group
 
 | Setting | Description | Default |
 |---------|-------------|---------|
-| Show | Display dependency arrows | On |
-| Line color | Dependency line color | #616161 |
-| Line width | Line thickness (1-5 px) | 1 |
-| Line style | Solid, Dashed, or Dotted | Solid |
-| Path style | Curved, Straight (elbow), or Straight down | Straight down |
+| Show | Display context columns | On |
+| Font | Font family, size (6-24), bold, italic, underline | Segoe UI, 10pt |
+| Color | Text color | #616161 |
+| Column width | Width for each context column (50-200 px) | 80 |
+| Column spacing | Spacing between columns (0-20 px) | 8 |
+
+---
+
+### 4. Grid
+
+Configure grid lines, dividers, row shading, and day shading.
+
+#### Primary Lines Group
+
+| Setting | Description | Default |
+|---------|-------------|---------|
+| Primary lines | Display vertical lines at primary time unit intervals | On |
+| Color | Line color | #e0e0e0 |
+| Style | Line style | Dashed |
+
+**Style options:** Solid, Dashed, Dotted
+
+#### Secondary Lines Group
+
+| Setting | Description | Default |
+|---------|-------------|---------|
+| Secondary lines | Display vertical lines at secondary unit boundaries | On |
+| Color | Line color | #c0c0c0 |
+| Style | Line style | Solid |
+
+*Secondary lines only appear when a secondary unit is configured in the Date Axis settings.*
+
+#### Divider Group
+
+| Setting | Description | Default |
+|---------|-------------|---------|
+| Label divider | Vertical line separating labels from chart | On |
+| Color | Divider line color | #e0e0e0 |
+| Width | Divider thickness (1-5 px) | 1 |
+| Style | Line style | Solid |
+
+#### Row Shading Group
+
+| Setting | Description | Default |
+|---------|-------------|---------|
+| Alternating rows | Display alternating row background colors | On |
+| Even rows | Background color for even rows | #ffffff |
+| Odd rows | Background color for odd rows | #f9f9f9 |
+
+#### Day Shading Group
+
+| Setting | Description | Default |
+|---------|-------------|---------|
+| Shade weekends | Highlight Saturday and Sunday columns | Off |
+| Custom days | Comma-separated day names to shade (e.g., "Monday, Friday") | (empty) |
+| Shade color | Background color for shaded day columns | #f0f0f0 |
+| Shade opacity | Transparency (10-100%) | 30% |
+
+---
+
+### 5. Connections
+
+Configure dependency lines, critical path highlighting, and visual toggle buttons.
+
+#### Dependencies Group
+
+| Setting | Description | Default |
+|---------|-------------|---------|
+| Dependency lines | Show task connection arrows | On |
+| Color | Line color | #616161 |
+| Width | Line thickness (1-5 px) | 1 |
+| Style | Line style | Solid |
+| Path | Path routing style | Straight down |
 | Arrow size | Size of arrowhead (4-16 px) | 8 |
 
-### Critical Path
+**Path options:**
+- **Curved** - Smooth curved lines
+- **Straight (elbow)** - Right-angle turns
+- **Straight down** - Vertical drop then horizontal
+
+#### Critical Path Group
 
 | Setting | Description | Default |
 |---------|-------------|---------|
-| Border color | Highlight border color | #c4314b |
+| Critical path color | Highlight border color for critical path tasks | #c4314b |
 | Border width | Highlight border thickness (1-6 px) | 2 |
-| Show duration summary | Display critical path stats | On |
+| Duration summary | Display critical path duration stats at bottom of chart | On |
 
-*Note: Use the Critical Path toggle button at the bottom of the chart to enable/disable highlighting.*
+*Use the Critical Path toggle button at the bottom of the chart to enable/disable highlighting.*
 
-### Categories
-
-| Setting | Description | Default |
-|---------|-------------|---------|
-| Show | Display category groupings | On |
-| Header font | Font family, size (10-24), bold, italic, underline | Segoe UI, 13pt, Bold |
-| Header color | Category header text color | #424242 |
-| Start expanded | Categories expanded by default | On |
-
-### Today Line
+#### Visual Toggles Group
 
 | Setting | Description | Default |
 |---------|-------------|---------|
-| Show | Display today marker line | On |
-| Line color | Marker line color | #c4314b |
-| Line width | Line thickness (1-6 px) | 2 |
-| Line style | Solid, Dashed, or Dotted | Solid |
-| Show label | Display label above line | On |
-| Label text | Text to display | Today |
-| Day offset | Shift marker by days (-365 to 365) | 0 |
+| Critical Path toggle | Show the Critical Path toggle button on the visual | On |
+| Slippage toggle | Show the Slippage toggle button on the visual | On |
+
+---
+
+### 6. Groups
+
+Configure category grouping behavior and appearance.
+
+| Setting | Description | Default |
+|---------|-------------|---------|
+| Groups | Enable/disable category groupings (top-level toggle) | On |
+| Font | Font family, size (10-24), bold, italic, underline | Segoe UI, 13pt, Bold |
+| Color | Category header text color | #424242 |
+| Expanded by default | Categories start in expanded state | On |
+
+---
+
+### 7. Marker
+
+Configure marker line appearance and the today marker.
+
+#### Appearance Group
+
+| Setting | Description | Default |
+|---------|-------------|---------|
+| Color | Marker line color (applies to today and custom markers) | #c4314b |
+| Width | Line thickness (1-6 px) | 2 |
+| Style | Line style | Solid |
+
+**Style options:** Solid, Dashed, Dotted
+
+#### Today Group
+
+| Setting | Description | Default |
+|---------|-------------|---------|
+| Today | Display today marker line | On |
+| Label | Display label above the marker line | On |
+| Label text | Custom text for the marker label | Today |
+| Day offset | Shift marker forward or back by days (-365 to 365) | 0 |
+
+*Tip: Use Day offset to show a deadline or milestone date relative to today. Positive values move the marker into the future, negative values into the past.*
 
 ## Version History
 
@@ -771,6 +840,7 @@ Available presets:
 - Renamed grid line settings to Primary Lines (at primary unit intervals) and Secondary Lines (at secondary unit boundaries)
 - Primary and Secondary lines now have independent show/hide, color, and style settings
 - Improved date alignment to respect unit boundaries (weeks start Monday, months start 1st, etc.)
+- Added "Week starts on" setting to configure which day begins the week (Sunday, Monday, etc.)
 
 ### Version 2.4.0.0
 
@@ -861,4 +931,3 @@ This visual and documentation were created with the assistance of GitHub Copilot
 ## License
 
 MIT License - See LICENSE file for details.
-
