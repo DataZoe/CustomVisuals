@@ -2,7 +2,7 @@
 
 A powerful, feature-rich Gantt chart custom visual for Microsoft Power BI that helps you visualize project timelines, track task dependencies, and identify critical paths.
 
-![Gantt Chart Visual](icon.png)
+![Gantt Chart Visual](assets/gantt-chart.png)
 
 ## Live Demo
 
@@ -801,3 +801,4 @@ This visual and documentation were created with the assistance of GitHub Copilot
 ## License
 
 MIT License - See LICENSE file for details.
+
