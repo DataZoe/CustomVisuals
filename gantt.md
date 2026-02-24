@@ -2,7 +2,7 @@
 
 A powerful, feature-rich Gantt chart custom visual for Microsoft Power BI that helps you visualize project timelines, track task dependencies, and identify critical paths.
 
-![Gantt Chart Visual](assets/gantt-chart.png)
+![Gantt Chart Visual](icon.png)
 
 ## Live Demo
 
@@ -79,7 +79,7 @@ Add additional columns (like Status, Owner, Priority) to display alongside tasks
 | Field | Required | Description |
 |-------|----------|-------------|
 | **Task** | ✅ Yes | Task name or description displayed on the chart |
-| **Start Date** | ✅ Yes | When the task begins |
+| **Start Date** | Optional | When the task begins. If missing, visual uses a default 30-day timeline |
 | **End Date** | Optional | When the task ends. If empty, task appears as a milestone |
 | **Category** | Optional | Groups tasks into collapsible sections |
 | **Task ID** | Optional | Unique identifier for dependency linking |
@@ -104,9 +104,10 @@ Add additional columns (like Status, Owner, Priority) to display alongside tasks
 Your data should be in a table format with at minimum:
 
 - A column for task names
-- A column for start dates
 
 Optionally include:
+
+- Start dates (if missing, a default 30-day timeline is used)
 
 - End dates
 - Task IDs (for dependencies)
@@ -801,4 +802,3 @@ This visual and documentation were created with the assistance of GitHub Copilot
 ## License
 
 MIT License - See LICENSE file for details.
-
