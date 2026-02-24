@@ -2,7 +2,7 @@
 
 A powerful, feature-rich Gantt chart custom visual for Microsoft Power BI that helps you visualize project timelines, track task dependencies, and identify critical paths.
 
-![Gantt Chart Visual](assets/gantt-chart.png)
+![Gantt Chart Visual](icon.png)
 
 ## Live Demo
 
@@ -55,10 +55,14 @@ Add one or more date measures to display vertical marker lines on the chart. Per
 
 Organize tasks into collapsible categories for better organization of large projects. Summary bars show the span of each category.
 
-### 🔍 Context Column Filtering
+### � Flexible Time Scale
+
+Control how the date axis displays with Auto or Manual mode. Auto intelligently selects day, week, month, quarter, or year intervals based on your date range. Manual mode lets you choose specific units and optionally add a secondary tier for hierarchical grouping (e.g., weeks under months, months under years).
+
+### �🔍 Context Column Filtering
 
 Add additional columns (like Status, Owner, Priority) to display alongside tasks. Click column headers to open a multi-select filter popup with checkboxes. Filter by multiple values, including blank entries. Filters apply instantly and show active filter status in the header.
-
+*Note: The filter popup is constrained within the visual container (a limitation of Power BI custom visuals). Ensure your visual has sufficient size for the popup to display properly.*
 ### ♿ Accessibility Features
 
 - Full keyboard navigation support
@@ -133,7 +137,7 @@ Optionally include:
    - **Milestones**: Shape, color, size
    - **Critical path**: Enable/disable, colors
    - **Task labels**: Font size, color
-   - **Grid lines**: Show/hide, color
+   - **Grid lines**: Primary and secondary line styles, colors
    - **Date header**: Font settings
    - **Categories**: Header color, expand/collapse behavior
 
@@ -628,13 +632,23 @@ Available presets:
 
 ### Grid Lines
 
-#### Vertical Grid Lines Group
+#### Primary Lines Group
 
 | Setting | Description | Default |
 |---------|-------------|---------|
-| Show vertical grid lines | Display vertical grid lines | On |
-| Line color | Grid line color | #e0e0e0 |
-| Line style | Solid, Dashed, or Dotted | Dashed |
+| Show | Display vertical lines at primary time unit intervals | On |
+| Color | Primary grid line color | #e0e0e0 |
+| Style | Solid, Dashed, or Dotted | Dashed |
+
+#### Secondary Lines Group
+
+| Setting | Description | Default |
+|---------|-------------|---------|
+| Show | Display vertical lines at secondary time unit boundaries | On |
+| Color | Secondary grid line color | #c0c0c0 |
+| Style | Solid, Dashed, or Dotted | Solid |
+
+*Note: Secondary lines only appear when a secondary unit is configured in the Date Axis settings.*
 
 #### Label Divider Group
 
@@ -669,6 +683,37 @@ Available presets:
 | Show | Display date header | On |
 | Font | Font family, size (10-24), bold, italic, underline | Segoe UI, 14pt |
 | Color | Text color | #242424 |
+
+### Date Axis
+
+#### Position Group
+
+| Setting | Description | Default |
+|---------|-------------|---------|
+| Position | Show date axis at top, bottom, or both | Bottom |
+
+#### Time Scale Group
+
+| Setting | Description | Default |
+|---------|-------------|---------|
+| Time scale | Auto selects best fit based on date range; Manual lets you choose units | Auto |
+| Primary unit | Main time unit for labels and primary grid lines (Day, Week, Month, Quarter, Year) | Week |
+| Secondary unit | Optional grouping tier above/below primary labels (None, Week, Month, Quarter, Year) | None |
+
+*Note: Primary lines appear at primary unit intervals. Secondary lines appear at secondary unit boundaries (when a secondary unit is configured).*
+
+**Auto mode behavior:**
+- ≤14 days: Day labels
+- ≤60 days: Week labels, Month grouping (if range > 2 weeks)
+- ≤180 days: Week or Month labels
+- ≤365 days: Month labels, Year grouping
+- >365 days: Month or Quarter labels, Year grouping
+
+**Example configurations:**
+- **Sprint view (2 weeks)**: Primary=Day, Secondary=Week
+- **Quarter view (3 months)**: Primary=Week, Secondary=Month
+- **Year view (12 months)**: Primary=Month, Secondary=Year
+- **Multi-year project**: Primary=Quarter, Secondary=Year
 
 ### Dependency Lines
 
@@ -714,6 +759,19 @@ Available presets:
 
 ## Version History
 
+### Version 2.5.0.0
+
+**Flexible Time Scale:**
+
+- Added Time Scale mode setting (Auto/Manual) in Date Axis settings
+- Auto mode intelligently selects the best time unit based on date range
+- Manual mode lets you specify Primary unit (Day, Week, Month, Quarter, Year)
+- Added Secondary unit option for two-tier date axis hierarchy (e.g., Months grouped under Years)
+- Secondary tier displays grouping labels with bracket lines above/below primary labels
+- Renamed grid line settings to Primary Lines (at primary unit intervals) and Secondary Lines (at secondary unit boundaries)
+- Primary and Secondary lines now have independent show/hide, color, and style settings
+- Improved date alignment to respect unit boundaries (weeks start Monday, months start 1st, etc.)
+
 ### Version 2.4.0.0
 
 **Context Column Filtering:**
@@ -725,6 +783,7 @@ Available presets:
 - Select All / Clear All quick actions
 - Header shows filter status (turns blue when filtered, displays selected count or single value)
 - Apply button to confirm selections, click outside to cancel
+- Filter popup stays within visual bounds (Power BI custom visual limitation)
 
 ### Version 2.2.1.0
 
@@ -802,4 +861,3 @@ This visual and documentation were created with the assistance of GitHub Copilot
 ## License
 
 MIT License - See LICENSE file for details.
-
