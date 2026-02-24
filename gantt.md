@@ -2,7 +2,7 @@
 
 A powerful, feature-rich Gantt chart custom visual for Microsoft Power BI that helps you visualize project timelines, track task dependencies, and identify critical paths.
 
-![Gantt Chart Visual](assets/gantt-icon.png)
+![Gantt Chart Visual](icon.png)
 
 ## Live Demo
 
@@ -55,6 +55,10 @@ Add one or more date measures to display vertical marker lines on the chart. Per
 
 Organize tasks into collapsible categories for better organization of large projects. Summary bars show the span of each category.
 
+### 🔍 Context Column Filtering
+
+Add additional columns (like Status, Owner, Priority) to display alongside tasks. Click column headers to open a multi-select filter popup with checkboxes. Filter by multiple values, including blank entries. Filters apply instantly and show active filter status in the header.
+
 ### ♿ Accessibility Features
 
 - Full keyboard navigation support
@@ -82,6 +86,7 @@ Organize tasks into collapsible categories for better organization of large proj
 | **Dependencies** | Optional | Comma-separated Task IDs that must complete first |
 | **Progress %** | Optional | Task completion percentage (0-100). Displays as progress bar overlay |
 | **Marker Dates** | Optional | Custom dates for vertical marker lines. Add multiple measures |
+| **Context Columns** | Optional | Additional columns displayed alongside tasks. Click headers to filter with multi-select checkboxes |
 | **Tooltips** | Optional | Additional data fields to show in tooltips |
 
 ## How to Use
@@ -433,6 +438,77 @@ RETURN
     )
 ```
 
+### Handling Missing Dates
+
+When tasks have missing or invalid start dates, the visual gracefully handles these scenarios:
+
+- **Tasks without dates**: Tasks with missing start dates are still displayed. The visual uses a default 30-day date range (starting from today) when no valid dates exist in the dataset.
+- **Partial data**: Even if some tasks have dates and others don't, all tasks are shown. Tasks without dates appear at a default position.
+
+This is useful when you have a task list that's still being planned and doesn't have dates assigned yet.
+
+#### Sample Data with Missing Dates
+
+| TaskID | Category | Task | StartDate | EndDate | Progress |
+|--------|----------|------|-----------|---------|----------|
+| 1 | Backlog | Review requirements | | | 0 |
+| 2 | Backlog | Define acceptance criteria | | | 0 |
+| 3 | Backlog | Estimate effort | | | 0 |
+| 4 | In Progress | Build login page | 2025-03-03 | 2025-03-07 | 50 |
+| 5 | In Progress | Create API endpoints | 2025-03-05 | 2025-03-12 | 25 |
+| 6 | Done | Setup project | 2025-02-24 | 2025-02-28 | 100 |
+
+#### DAX Table with Missing Dates
+
+```dax
+TasksWithMissingDates = 
+VAR TaskTable = 
+    {
+        ( 1, "Review requirements", "Backlog", BLANK(), BLANK(), 0 ),
+        ( 2, "Define acceptance criteria", "Backlog", BLANK(), BLANK(), 0 ),
+        ( 3, "Estimate effort", "Backlog", BLANK(), BLANK(), 0 ),
+        ( 4, "Build login page", "In Progress", DATE(2025,3,3), DATE(2025,3,7), 50 ),
+        ( 5, "Create API endpoints", "In Progress", DATE(2025,3,5), DATE(2025,3,12), 25 ),
+        ( 6, "Setup project", "Done", DATE(2025,2,24), DATE(2025,2,28), 100 )
+    }
+RETURN
+    SELECTCOLUMNS(
+        TaskTable,
+        "Task ID", [Value1],
+        "Task", [Value2],
+        "Category", [Value3],
+        "Start", [Value4],
+        "End", [Value5],
+        "Progress", [Value6]
+    )
+```
+
+#### All Tasks Without Dates
+
+If your entire dataset has no dates (e.g., a backlog of unscheduled work), the visual still renders with a default 30-day timeline:
+
+```dax
+UnscheduledBacklog = 
+VAR TaskTable = 
+    {
+        ( 1, "User authentication", "Security", BLANK(), BLANK(), 0 ),
+        ( 2, "Password reset flow", "Security", BLANK(), BLANK(), 0 ),
+        ( 3, "Dashboard widgets", "UI", BLANK(), BLANK(), 0 ),
+        ( 4, "Export to PDF", "Features", BLANK(), BLANK(), 0 ),
+        ( 5, "Email notifications", "Features", BLANK(), BLANK(), 0 )
+    }
+RETURN
+    SELECTCOLUMNS(
+        TaskTable,
+        "Task ID", [Value1],
+        "Task", [Value2],
+        "Category", [Value3],
+        "Start", [Value4],
+        "End", [Value5],
+        "Progress", [Value6]
+    )
+```
+
 ## Tips and Best Practices
 
 ### Data Preparation
@@ -441,6 +517,7 @@ RETURN
 - Keep Task IDs unique and simple (numbers or short codes)
 - Use comma-separated values for multiple dependencies
 - Leave End Date empty for milestones
+- Tasks with missing start dates will still appear (using a default timeline)
 
 ### Visual Design
 
@@ -636,6 +713,18 @@ Available presets:
 
 ## Version History
 
+### Version 2.4.0.0
+
+**Context Column Filtering:**
+
+- Added Context Columns data field for displaying additional task attributes (Status, Owner, Priority, etc.)
+- Click any context column header with ▾ to open a multi-select filter popup
+- Fluent 2 styled popup with checkboxes for each unique value
+- Support for filtering by blank/empty values (shown as "(Blank)")
+- Select All / Clear All quick actions
+- Header shows filter status (turns blue when filtered, displays selected count or single value)
+- Apply button to confirm selections, click outside to cancel
+
 ### Version 2.2.1.0
 
 **High Contrast Mode Enhancements:**
@@ -712,6 +801,3 @@ This visual and documentation were created with the assistance of GitHub Copilot
 ## License
 
 MIT License - See LICENSE file for details.
-
-
-
