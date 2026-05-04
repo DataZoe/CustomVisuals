@@ -2,7 +2,7 @@
 
 A powerful, feature-rich Gantt chart custom visual for Microsoft Power BI that helps you visualize project timelines, track task dependencies, and identify critical paths.
 
-![Gantt Chart Visual](assets/gantt-chart.png)
+![Gantt Chart Visual](icon.png)
 
 ## Live Demo
 
@@ -55,11 +55,23 @@ Add one or more date measures to display vertical marker lines on the chart. Per
 
 Organize tasks into collapsible categories for better organization of large projects. Summary bars show the span of each category.
 
-### � Flexible Time Scale
+### 👥 Resource Tracking & Conflict Detection
+
+Assign a resource to each task and the visual will:
+
+- Display resources in a dedicated column
+- Detect **resource conflicts** — when the same resource is assigned to overlapping tasks, both cells get a colored pill and a tooltip listing the conflicting tasks
+- Let you **click a resource** to focus on its rows; everything else dims, making it easy to scan one person/team's workload
+
+### ⏱️ Relative-Units Mode
+
+Use a numeric Start/End instead of dates to chart schedules in hours, minutes, days, weeks, months, or years. Perfect for event run-of-show, manufacturing cycles, or any process where calendar dates aren't meaningful.
+
+### 📅 Flexible Time Scale
 
 Control how the date axis displays with Auto or Manual mode. Auto intelligently selects day, week, month, quarter, or year intervals based on your date range. Manual mode lets you choose specific units and optionally add a secondary tier for hierarchical grouping (e.g., weeks under months, months under years).
 
-### �🔍 Context Column Filtering
+### 🔍 Context Column Filtering
 
 Add additional columns (like Status, Owner, Priority) to display alongside tasks. Click column headers to open a multi-select filter popup with checkboxes. Filter by multiple values, including blank entries. Filters apply instantly and show active filter status in the header.
 *Note: The filter popup is constrained within the visual container (a limitation of Power BI custom visuals). Ensure your visual has sufficient size for the popup to display properly.*
@@ -83,12 +95,13 @@ Add additional columns (like Status, Owner, Priority) to display alongside tasks
 | Field | Required | Description |
 |-------|----------|-------------|
 | **Task** | ✅ Yes | Task name or description displayed on the chart |
-| **Start Date** | Optional | When the task begins. If missing, visual uses a default 30-day timeline |
-| **End Date** | Optional | When the task ends. If empty, task appears as a milestone |
+| **Start Date** | Optional | When the task begins. Accepts a date OR a numeric value (relative-units mode). If missing, visual uses a default 30-day timeline |
+| **End Date** | Optional | When the task ends. If empty, task appears as a milestone. Must match the type of Start Date (date OR numeric) |
 | **Category** | Optional | Groups tasks into collapsible sections |
 | **Task ID** | Optional | Unique identifier for dependency linking |
 | **Dependencies** | Optional | Comma-separated Task IDs that must complete first |
 | **Progress %** | Optional | Task completion percentage (0-100). Displays as progress bar overlay |
+| **Resource** | Optional | Person/team assigned to the task. Shown in a dedicated column. Click a resource to focus its rows; conflicts (same resource, overlapping dates) get a colored pill in the cell |
 | **Marker Dates** | Optional | Custom dates for vertical marker lines. Add multiple measures |
 | **Context Columns** | Optional | Additional columns displayed alongside tasks. Click headers to filter with multi-select checkboxes |
 | **Tooltips** | Optional | Additional data fields to show in tooltips |
@@ -128,25 +141,29 @@ Optionally include:
    - **Task ID**: Your unique identifier column (optional)
    - **Dependencies**: Your dependencies column (optional)
    - **Category**: Your category/phase column (optional)
+   - **Progress %**: Your completion measure (optional)
+   - **Resource**: Your assigned person/team column (optional)
 
 ### Step 4: Customize Appearance
 
 1. With the visual selected, click the **Format** pane (paint roller icon)
 2. Expand the formatting cards to customize:
-   - **Task bars**: Colors, borders, opacity, height
+   - **Bars**: Colors, borders, opacity, height, duration label, progress overlay
    - **Milestones**: Shape, color, size
-   - **Critical path**: Enable/disable, colors
-   - **Task labels**: Font size, color
-   - **Grid lines**: Primary and secondary line styles, colors
-   - **Date header**: Font settings
-   - **Categories**: Header color, expand/collapse behavior
+   - **Columns**: Task / Context / Resource column fonts, colors, widths
+   - **Axis**: Time scale, units, axis title, grid lines, divider, row & day shading
+   - **Top level timeline / Category timeline**: Summary roll-up rows above the chart and per-category
+   - **Markers**: Today line and any custom Marker Date measures
+   - **Analytics**: Dependencies, Critical path, Slippage, Resource conflicts
 
 ### Step 5: Interact with the Chart
 
 - **Click** a task to select it and cross-filter other visuals
 - **Ctrl+Click** to select multiple tasks
 - **Click** category headers to expand/collapse groups
-- **Use the Critical Path toggle** button to show/hide the critical path
+- **Click** a context column header (with the ▾ caret) to open a multi-select filter
+- **Click** a resource cell to focus that resource (other rows dim); click empty space to clear
+- **Use the Critical Path / Slippage / Resource conflicts toggles** at the bottom of the chart
 - **Right-click** for context menu options
 - **Use Tab/Arrow keys** for keyboard navigation
 
@@ -514,7 +531,36 @@ RETURN
     )
 ```
 
-## Tips and Best Practices
+## Sample Datasets (TMDL)
+
+The repo ships two ready-to-use TMDL scripts under `assets/sample-data/`. In Power BI Desktop with TMDL view enabled, paste either script as a new table to instantly demo every analytics feature.
+
+### Calendar_ProductLaunch.tmdl
+
+A 12-task product launch on real calendar dates (April–June 2026). Demonstrates:
+
+- **Critical path**: 1 → 2 → 4 → 6 → 8 → 10 → 11
+- **Slippage**: tasks 4, 6, and 8 have `EndDate > PlannedEnd`
+- **Resource conflicts** (intentional):
+  - Resource A double-booked May 11–22 (tasks 4 and 5)
+  - Resource D double-booked May 22–28 (tasks 8 and 9)
+- **Milestones**: task 0 (Kickoff) and task 11 (GA release)
+- **Categories**: Discovery / Build / Launch
+- **Marker measures**: Kickoff, Code freeze, GA target, Latest planned end, Latest actual end
+
+Bind the columns: `Task` → Task, `StartDate` → Start, `EndDate` → End, `TaskId` → Task ID, `Dependencies` → Dependencies, `Category` → Category, `Resource` → Resource, `Progress` → Progress %, `Tooltip_Notes` → Tooltips.
+
+### RelativeUnits_LaunchDay.tmdl
+
+A single-day event run-of-show with numeric (hour-offset) Start/End values. Demonstrates:
+
+- **Relative-units mode** rendering with hour suffixes
+- **Resource conflict** (Resource A on Keynote vs Press Q&A)
+- Sub-task IDs and dependencies
+
+In the visual's settings, set Start/End units to **Hour** and pick the appropriate origin.
+
+
 
 ### Data Preparation
 
@@ -539,11 +585,11 @@ RETURN
 
 ## Formatting Options Reference
 
-The format pane is organized into seven main cards. All numeric and color options support **conditional formatting**, allowing you to set values based on data fields.
+The format pane is organized into ten cards (in display order: **Style presets, Layout, Axis, Columns, Bars, Milestones, Top level timeline, Category timeline, Markers, Analytics**). Most numeric and color options support **conditional formatting**, allowing you to set values based on data fields.
 
 ---
 
-### 1. Layout
+### 1. Style presets
 
 Quick layout adjustments using presets.
 
@@ -564,162 +610,82 @@ Quick layout adjustments using presets.
 
 ---
 
-### 2. Bars
+### 2. Layout
 
-Configure task bar appearance, duration labels, progress overlays, slipped task highlighting, and milestones.
+Controls where the date axis and the various label columns are placed around the chart.
 
-#### Appearance Group
-
-| Setting | Description | Default |
-|---------|-------------|---------|
-| Theme colors | Auto-assign colors from Power BI theme based on category | Off |
-| Color | Bar fill color | #0f6cbd |
-| Opacity | Bar transparency (0-100%) | 100% |
-| Border | Display bar border | Off |
-| Border color | Border color when enabled | #0e4775 |
-| Border width | Border thickness (0-5 px) | 1 |
-| Height | Height of bars (10-50 px) | 14 |
-| Corner radius | Rounded corners (0-20 px) | 4 |
-| Row spacing | Space between rows (0-20 px) | 2 |
-
-#### Duration Label Group
+#### Position Group
 
 | Setting | Description | Default |
 |---------|-------------|---------|
-| Duration label | Display duration text on bars | On |
-| Font | Font family, size (6-24), bold, italic, underline | Segoe UI, 11pt, Bold |
-| Color | Duration text color | #ffffff |
-| Auto-contrast | Automatically adjust text color for readability against bar color | On |
-
-#### Progress Group
-
-| Setting | Description | Default |
-|---------|-------------|---------|
-| Progress overlay | Display progress bar overlay on tasks | On |
-| Data format | How progress values are provided | Whole number (0-100) |
-| Color | Progress bar color | #ffffff |
-| Opacity | Progress bar transparency (10-100%) | 40% |
-| Height | Height as percentage of task bar (20-100%) | 100% |
-| Pattern | Fill pattern style | Solid |
-
-**Data format options:**
-- **Whole number (0-100)** - Use when your data contains values like 50, 75, 100
-- **Percentage (0%-100%)** - Use when your data contains decimal values like 0.5, 0.75, 1.0
-
-**Pattern options:** Solid, Diagonal stripes, Dots, Crosshatch, Horizontal lines
-
-#### Slipped Tasks Group
-
-| Setting | Description | Default |
-|---------|-------------|---------|
-| Slipped color | Color for tasks pushed past original dates by dependencies | #c4314b |
-
-*Use the Slippage toggle button at the bottom of the chart to enable/disable highlighting.*
-
-#### Milestones Group
-
-| Setting | Description | Default |
-|---------|-------------|---------|
-| Milestone shape | Shape for milestone markers | Diamond |
-| Milestone color | Fill color | #c4314b |
-| Milestone size | Size in pixels (6-24 px) | 12 |
-
-**Shape options:** Diamond, Circle, Square, Triangle, Star
+| Axis position | Show the date axis at the top, bottom, or both | Bottom |
+| Task column | Place the Task column on the left or right of the chart | Left |
+| Context columns | Place context columns on the left or right of the chart | Left |
+| Resource column | Place the Resource column on the left or right of the chart | Left |
 
 ---
 
-### 3. Labels
+### 3. Axis
 
-Configure task labels, timeline header, date axis settings, and context columns.
+Date axis units (calendar or relative), axis title, grid lines, divider, row banding and day shading — all in one composite card.
 
-#### Task Labels Group
-
-| Setting | Description | Default |
-|---------|-------------|---------|
-| Task labels | Display task names | On |
-| Font | Font family, size (8-24), bold, italic, underline | Segoe UI, 10pt |
-| Color | Text color | #242424 |
-| Max width | Maximum width before truncation (50-500 px) | 140 |
-| Word wrap | Wrap long names to multiple lines | Off |
-| Selection color | Background color when task is selected | #ebf3fc |
-
-#### Timeline Header Group
+#### Units Group
 
 | Setting | Description | Default |
 |---------|-------------|---------|
-| Timeline header | Display date header above chart | On |
-| Font | Font family, size (10-24), bold, italic, underline | Segoe UI, 14pt |
-| Header color | Text color | #242424 |
-
-#### Date Axis Group
-
-| Setting | Description | Default |
-|---------|-------------|---------|
-| Position | Show date axis at top, bottom, or both | Bottom |
-| Time scale | Auto or Manual mode | Auto |
-| Primary unit | Main time unit for labels and grid lines | Week |
-| Secondary unit | Optional grouping tier above/below primary labels | None |
-| Week starts on | First day of the week for week calculations | Monday |
-| Day unit min width | Minimum width per day in pixels (1-100 px) | 10 |
-
-**Time scale modes:**
-- **Auto** - Intelligently selects the best time unit based on your date range
-- **Manual** - You choose the primary and secondary units
-
-**Primary/Secondary unit options:** Day, Week, Month, Quarter, Year (Secondary also has None)
-
-**Week starts on options:** Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday
+| Time scale | Auto picks the best fit; Manual lets you choose units | Auto |
+| Primary unit | Main time unit for labels and grid lines (Day / Week / Month / Quarter / Year) | Week |
+| Secondary unit | Optional grouping tier above primary labels (None / Week / Month / Quarter / Year) | None |
+| Week starts on | First day of the week for week-unit calculations | Monday |
+| Day unit min width | Minimum width per day in pixels (1–100) | 10 |
 
 **Auto mode behavior:**
+
 | Date Range | Primary Unit | Secondary Unit |
 |------------|--------------|----------------|
-| ≤14 days | Day | - |
+| ≤14 days | Day | – |
 | ≤60 days | Week | Month (if >2 weeks) |
-| ≤180 days | Week or Month | - |
+| ≤180 days | Week or Month | – |
 | ≤365 days | Month | Year |
 | >365 days | Month or Quarter | Year |
 
-**Example manual configurations:**
-- **Sprint view (2 weeks)**: Primary=Day, Secondary=Week
-- **Quarter view (3 months)**: Primary=Week, Secondary=Month
-- **Year view (12 months)**: Primary=Month, Secondary=Year
-- **Multi-year project**: Primary=Quarter, Secondary=Year
+#### Relative Units Group
 
-#### Context Columns Group
+*Active only when the Start column is numeric (relative-units mode).*
 
 | Setting | Description | Default |
 |---------|-------------|---------|
-| Show | Display context columns | On |
-| Font | Font family, size (6-24), bold, italic, underline | Segoe UI, 10pt |
-| Color | Text color | #616161 |
-| Column width | Width for each context column (50-200 px) | 80 |
-| Column spacing | Spacing between columns (0-20 px) | 8 |
+| Unit | Unit label used for relative axis ticks (Year, Month, Week, Day, Hour, Minute, Second, Step) | Day |
+| Start at | Whether the first unit is labeled 0 or 1 | 1 |
+| Label prefix | Text shown before each tick value (e.g. "Day ") | (empty) |
+| Label suffix | Text shown after each tick value | (empty) |
+| Tick interval | Spacing between major axis ticks, in units (1–1000) | 1 |
 
----
+#### Axis Title Group
 
-### 4. Grid
-
-Configure grid lines, dividers, row shading, and day shading.
+| Setting | Description | Default |
+|---------|-------------|---------|
+| Title | Show the date axis title (timeline header) | On |
+| Title font | Font family, size (10–24), bold, italic, underline | Segoe UI, 14pt |
+| Title color | Header text color | #242424 |
 
 #### Primary Lines Group
 
 | Setting | Description | Default |
 |---------|-------------|---------|
-| Primary lines | Display vertical lines at primary time unit intervals | On |
+| Primary lines | Show vertical lines at primary unit intervals | On |
 | Color | Line color | #e0e0e0 |
-| Style | Line style | Dashed |
-
-**Style options:** Solid, Dashed, Dotted
+| Style | Solid / Dashed / Dotted | Dashed |
 
 #### Secondary Lines Group
 
 | Setting | Description | Default |
 |---------|-------------|---------|
-| Secondary lines | Display vertical lines at secondary unit boundaries | On |
+| Secondary lines | Show vertical lines at secondary unit boundaries | On |
 | Color | Line color | #c0c0c0 |
-| Style | Line style | Solid |
+| Style | Solid / Dashed / Dotted | Solid |
 
-*Secondary lines only appear when a secondary unit is configured in the Date Axis settings.*
+*Secondary lines only appear when a secondary unit is configured.*
 
 #### Divider Group
 
@@ -727,8 +693,8 @@ Configure grid lines, dividers, row shading, and day shading.
 |---------|-------------|---------|
 | Label divider | Vertical line separating labels from chart | On |
 | Color | Divider line color | #e0e0e0 |
-| Width | Divider thickness (1-5 px) | 1 |
-| Style | Line style | Solid |
+| Width | Divider thickness (1–5 px) | 1 |
+| Style | Solid / Dashed / Dotted | Solid |
 
 #### Row Shading Group
 
@@ -745,75 +711,166 @@ Configure grid lines, dividers, row shading, and day shading.
 | Shade weekends | Highlight Saturday and Sunday columns | Off |
 | Custom days | Comma-separated day names to shade (e.g., "Monday, Friday") | (empty) |
 | Shade color | Background color for shaded day columns | #f0f0f0 |
-| Shade opacity | Transparency (10-100%) | 30% |
+| Shade opacity | Transparency (10–100%) | 30% |
 
 ---
 
-### 5. Connections
+### 4. Columns
 
-Configure dependency lines, critical path highlighting, and visual toggle buttons.
+The text columns that sit alongside the chart: the task name column, optional context columns, and the resource column.
 
-#### Dependencies Group
-
-| Setting | Description | Default |
-|---------|-------------|---------|
-| Dependency lines | Show task connection arrows | On |
-| Color | Line color | #616161 |
-| Width | Line thickness (1-5 px) | 1 |
-| Style | Line style | Solid |
-| Path | Path routing style | Straight down |
-| Arrow size | Size of arrowhead (4-16 px) | 8 |
-
-**Path options:**
-- **Curved** - Smooth curved lines
-- **Straight (elbow)** - Right-angle turns
-- **Straight down** - Vertical drop then horizontal
-
-#### Critical Path Group
+#### Task column Group
 
 | Setting | Description | Default |
 |---------|-------------|---------|
-| Critical path color | Highlight border color for critical path tasks | #c4314b |
-| Border width | Highlight border thickness (1-6 px) | 2 |
-| Duration summary | Display critical path duration stats at bottom of chart | On |
+| Task labels | Display task names | On |
+| Font | Font family, size (8–24), bold, italic, underline | Segoe UI, 10pt |
+| Color | Text color | #242424 |
+| Max width | Maximum width before truncation (50–500 px) | 140 |
+| Word wrap | Wrap long names to multiple lines | Off |
+| Selection color | Background color when task is selected | #ebf3fc |
 
-*Use the Critical Path toggle button at the bottom of the chart to enable/disable highlighting.*
-
-#### Visual Toggles Group
+#### Context columns Group
 
 | Setting | Description | Default |
 |---------|-------------|---------|
-| Critical Path toggle | Show the Critical Path toggle button on the visual | On |
-| Slippage toggle | Show the Slippage toggle button on the visual | On |
+| Show | Display context columns | On |
+| Font | Font family, size (6–24), bold, italic, underline | Segoe UI, 10pt |
+| Color | Text color | #616161 |
+| Column width | Width for each context column (50–200 px) | 80 |
+| Column spacing | Spacing between columns (0–20 px) | 8 |
+
+#### Resource column Group
+
+| Setting | Description | Default |
+|---------|-------------|---------|
+| Show | Display the resource column | On |
+| Font | Font family, size (6–24), bold, italic, underline | Segoe UI, 10pt |
+| Color | Text color | #424242 |
+| Column width | Width of the resource column (50–300 px) | 100 |
 
 ---
 
-### 6. Groups
+### 5. Bars
 
-Configure category grouping behavior and appearance.
+Configure task bar appearance, duration labels, and progress overlays. (Milestones are now their own top-level card — see below.)
+
+#### Appearance Group
 
 | Setting | Description | Default |
 |---------|-------------|---------|
-| Groups | Enable/disable category groupings (top-level toggle) | On |
-| Font | Font family, size (10-24), bold, italic, underline | Segoe UI, 13pt, Bold |
+| Theme colors | Auto-assign colors from Power BI theme based on category | Off |
+| Color | Bar fill color | #0f6cbd |
+| Opacity | Bar transparency (0–100%) | 100% |
+| Border | Display bar border | Off |
+| Border color | Border color when enabled | #0e4775 |
+| Border width | Border thickness (0–5 px) | 1 |
+| Height | Height of bars (10–50 px) | 14 |
+| Corner radius | Rounded corners (0–20 px) | 4 |
+| Row spacing | Space between rows (0–20 px) | 2 |
+
+#### Duration label Group
+
+| Setting | Description | Default |
+|---------|-------------|---------|
+| Duration label | Display duration text on bars | On |
+| Font | Font family, size (6–24), bold, italic, underline | Segoe UI, 11pt, Bold |
+| Color | Duration text color | #ffffff |
+| Auto-contrast | Automatically adjust text color for readability against bar color | On |
+
+#### Progress Group
+
+| Setting | Description | Default |
+|---------|-------------|---------|
+| Progress overlay | Display progress bar overlay on tasks | On |
+| Data format | How progress values are provided (Whole number 0-100 or Percentage 0%-100%) | Whole number (0-100) |
+| Color | Progress bar color | #ffffff |
+| Opacity | Progress bar transparency (10–100%) | 40% |
+| Height | Height as percentage of task bar (20–100%) | 100% |
+| Pattern | Fill pattern style (Solid / Diagonal stripes / Dots / Crosshatch / Horizontal lines) | Solid |
+
+---
+
+### 6. Milestones
+
+Top-level card controlling how milestone (zero-duration) tasks render.
+
+| Setting | Description | Default |
+|---------|-------------|---------|
+| Milestone shape | Diamond / Circle / Square / Triangle / Star | Diamond |
+| Milestone color | Fill color | #c4314b |
+| Milestone size | Size in pixels (6–24 px) | 12 |
+
+---
+
+### 7. Top level timeline
+
+A grand-summary "All" row that rolls every task into one bar (or one bar per category) above the main chart. Has its own card-level toggle.
+
+#### Top level Group
+
+| Setting | Description | Default |
+|---------|-------------|---------|
+| Show value | Show duration label on the summary bar | On |
+| Value font | Font family, size (6–24), bold, italic, underline | Segoe UI, 10pt, Bold |
+| Value color | Label text color | #ffffff |
+| Value auto contrast | Pick black or white to contrast with the bar color | On |
+| Unit | Duration unit shown in the value label (Days / Weeks / Months) | Days |
+| Breakdown | Single bar OR segmented by category | Single bar |
+| Include milestones | Show milestone markers on the summary row | On |
+| Header label | Label shown next to the top-level row | All |
+| Show task count | Append `(n)` task count after the header label | On |
+
+#### Bar Group
+
+| Setting | Description | Default |
+|---------|-------------|---------|
+| Color | Default bar color | #9E9E9E |
+| Use category colors | When breakdown is "by category", color each segment with the category's first task color | On |
+| Opacity (%) | Bar transparency (10–100) | 100 |
+| Height (%) | Bar height as a percentage of row height (20–100) | 60 |
+| Corner radius | Rounded corners (0–12 px) | 2 |
+| Row height (%) | Row height as a percentage of the default row height (50–500) | 100 |
+
+---
+
+### 8. Category timeline
+
+Summary bars per category (driven by the Category data field). Card-level toggle controls whether the category rows appear at all.
+
+#### Category Group
+
+| Setting | Description | Default |
+|---------|-------------|---------|
+| Font | Font family, size (10–24), bold, italic, underline | Segoe UI, 13pt, Bold |
 | Color | Category header text color | #424242 |
 | Expanded by default | Categories start in expanded state | On |
+| Include milestones | Show milestone markers on category summary rows | On |
+
+#### Bar Group
+
+| Setting | Description | Default |
+|---------|-------------|---------|
+| Color | Default category bar color | #9E9E9E |
+| Use category colors | Color each summary bar with the category's first task color | Off |
+| Opacity (%) | Bar transparency (10–100) | 100 |
+| Height (%) | Bar height as a percentage of row height (20–100) | 60 |
+| Corner radius | Rounded corners (0–12 px) | 2 |
+| Row height (%) | Row height as a percentage of the default row height (50–500) | 100 |
 
 ---
 
-### 7. Marker
+### 9. Markers
 
-Configure marker line appearance and the today marker.
+Vertical marker lines for the today line and any custom Marker Date measures you bind.
 
 #### Appearance Group
 
 | Setting | Description | Default |
 |---------|-------------|---------|
 | Color | Marker line color (applies to today and custom markers) | #c4314b |
-| Width | Line thickness (1-6 px) | 2 |
-| Style | Line style | Solid |
-
-**Style options:** Solid, Dashed, Dotted
+| Width | Line thickness (1–6 px) | 2 |
+| Style | Solid / Dashed / Dotted | Solid |
 
 #### Today Group
 
@@ -826,7 +883,78 @@ Configure marker line appearance and the today marker.
 
 *Tip: Use Day offset to show a deadline or milestone date relative to today. Positive values move the marker into the future, negative values into the past.*
 
+---
+
+### 10. Analytics
+
+Dependency arrows plus the three analytics features (Critical path, Slippage, Resource conflicts), each with its own canvas toggle button.
+
+#### Dependencies Group
+
+| Setting | Description | Default |
+|---------|-------------|---------|
+| Dependency lines | Show task connection arrows | On |
+| Color | Line color | #616161 |
+| Width | Line thickness (1–5 px) | 1 |
+| Style | Solid / Dashed / Dotted | Solid |
+| Path | Curved / Straight (elbow) / Straight down | Straight down |
+| Arrow size | Size of arrowhead (4–16 px) | 8 |
+
+#### Critical path Group
+
+| Setting | Description | Default |
+|---------|-------------|---------|
+| Show toggle button | Show the Critical Path toggle button on the visual | On |
+| Critical path color | Highlight border color for critical path tasks | #c4314b |
+| Border width | Highlight border thickness (1–6 px) | 2 |
+| Duration summary | Display critical path duration stats at bottom of chart | On |
+
+*The toggle is automatically hidden when the data has no Dependencies, since critical path requires dependency information.*
+
+#### Slippage Group
+
+| Setting | Description | Default |
+|---------|-------------|---------|
+| Show toggle button | Show the Slippage toggle button on the visual | On |
+| Slipped color | Color used for tasks that have been pushed past their original dates | #c4314b |
+
+*The Slippage toggle controls both highlighting **and** date cascading. When OFF (default), tasks render at their user-specified Start/End dates. When ON, tasks with Dependencies are pushed forward so they start the day after the latest predecessor ends, and tasks that moved are highlighted in the slipped color. The toggle is automatically hidden when the data has no Dependencies.*
+
+#### Resource conflicts Group
+
+| Setting | Description | Default |
+|---------|-------------|---------|
+| Highlight conflicts | Detect and highlight tasks where the same resource is double-booked | On |
+| Highlight color | Pill background color used on conflicting resource cells | #d83b01 |
+| Border width | Reserved for future styling (1–6 px) | 2 |
+| Show toggle button | Show the Resource conflicts toggle button on the visual | On |
+
+*When detection is on, any two non-milestone tasks that share a resource (case-insensitive; comma-separated values are split) AND overlap in time get a colored pill on the resource cell. Hover the cell to see which other tasks are in conflict. Click a resource cell to focus that resource — rows whose tasks don't include it are dimmed; click empty chart space to clear.*
+
 ## Version History
+
+### Version 2.6.0.0
+
+**Resource awareness, on-demand slippage, and bundled samples:**
+
+- Added **Resource** data field with dedicated column rendering
+- Added **Resource conflict** detection: tasks sharing a resource with overlapping dates display a colored pill on the resource cell, and a tooltip lists the conflicting task names
+- Added **Resource conflicts toggle** button on the canvas (joins Critical Path and Slippage toggles)
+- Click a resource cell to **focus that resource** — rows whose tasks don't include the resource are dimmed; click again or click empty chart space to clear
+- **Slippage toggle now controls date cascading**: when OFF (default), tasks render at their user-specified dates. When ON, dependent tasks are pushed forward by their predecessors and the moved tasks are highlighted
+- **Critical Path and Slippage toggles are auto-hidden** when the dataset has no Dependencies (since both require dependency information)
+- **Relative-units mode**: Start/End now accept numeric values (with a configurable origin) so the visual can render schedules measured in hours, minutes, days, etc., instead of calendar dates. Duration labels everywhere honor the unit suffix (h, min, d, w, mo, y, s)
+- Added marker measures and pre-built **TMDL sample datasets** (`Calendar_ProductLaunch.tmdl`, `RelativeUnits_LaunchDay.tmdl`) under `assets/sample-data/` that demonstrate critical path, slippage, conflicts, milestones, dependencies, categories, and resources end-to-end
+
+**Format pane overhaul:**
+
+- Pane reorganized into **10 top-level cards** in display order: Style presets, Layout, Axis, Columns, Bars, Milestones, Top level timeline, Category timeline, Markers, Analytics
+- New **Layout** card with a Position group for axis / task column / context columns / resource column placement (left, right, top, bottom)
+- New **Axis** card consolidates Units, Relative units, Axis title, Primary lines, Secondary lines, Divider, Row shading, and Day shading into one composite card
+- New **Columns** card groups Task column, Context columns, and the new Resource column together
+- **Milestones** promoted from a Bars subgroup to its own top-level card
+- **Timeline** split into **Top level timeline** (grand-summary "All" row) and **Category timeline** (per-category summary rows), each with its own card-level toggle
+- Old **Connections** card renamed to **Analytics** and now contains Dependencies, Critical path, Slippage, and the new Resource conflicts groups — each analytics feature has its own canvas toggle slice
 
 ### Version 2.5.0.0
 
@@ -931,4 +1059,3 @@ This visual and documentation were created with the assistance of GitHub Copilot
 ## License
 
 MIT License - See LICENSE file for details.
-
