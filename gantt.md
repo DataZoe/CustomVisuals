@@ -765,12 +765,16 @@ The text columns that sit alongside the chart: the task name column, optional co
 
 Configure task bar appearance, duration labels, and progress overlays. (Milestones are now their own top-level card — see below.)
 
-#### Appearance Group
+#### Colors Group
+
+> **Color cascade:** When **Color by category** is on, each category gets its own color from the report theme palette. The same per-category color is applied to bars, milestones, the category row tint, the category summary bar, and (when broken down by category) the top-timeline bar segments. The single **Color** picker in this group, in **Top timeline › Bar**, and in **Category timeline › Bar** is hidden because it has no effect in this mode.
+>
+> **Override one category:** Bind a measure that returns a hex color string (e.g. `"#0078d4"`) to the **Category bar color** slot under the Category field well to override an individual category's color without leaving palette mode.
 
 | Setting | Description | Default |
 |---------|-------------|---------|
-| Theme colors | Auto-assign colors from Power BI theme based on category | Off |
-| Color | Bar fill color | #0f6cbd |
+| Color by category | Use the report theme palette to color each category. Off uses the single Color below. | On |
+| Color | Single bar fill color (used when Color by category is off) | #0f6cbd |
 | Opacity | Bar transparency (0–100%) | 100% |
 | Border | Display bar border | Off |
 | Border color | Border color when enabled | #0e4775 |
@@ -830,8 +834,7 @@ A grand-summary "All" row that rolls every task into one bar (or one bar per cat
 
 | Setting | Description | Default |
 |---------|-------------|---------|
-| Color | Default bar color | #9E9E9E |
-| Use category colors | When breakdown is "by category", color each segment with the category's first task color | On |
+| Color | Default bar color (used when Bars › Colors › Color by category is off) | #9E9E9E |
 | Opacity (%) | Bar transparency (10–100) | 100 |
 | Height (%) | Bar height as a percentage of row height (20–100) | 60 |
 | Corner radius | Rounded corners (0–12 px) | 2 |
@@ -867,8 +870,7 @@ Summary bars per category (driven by the Category data field). Card-level toggle
 | Setting | Description | Default |
 |---------|-------------|---------|
 | Show (group toggle) | Show the per-category summary bar | On |
-| Color | Default category bar color | #9E9E9E |
-| Use category colors | Color each summary bar with the category's first task color | Off |
+| Color | Default category bar color (used when Bars › Colors › Color by category is off) | #9E9E9E |
 | Opacity (%) | Bar transparency (10–100) | 100 |
 | Height (%) | Bar height as a percentage of row height (20–100) | 60 |
 | Corner radius | Rounded corners (0–12 px) | 2 |

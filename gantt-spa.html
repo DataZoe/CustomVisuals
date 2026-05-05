@@ -1,0 +1,986 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Gantt SPA Demo</title>
+<style>
+  :root {
+    --bg: #faf9f8;
+    --panel: #ffffff;
+    --border: #e1dfdd;
+    --text: #242424;
+    --muted: #605e5c;
+    --accent: #0e4775;
+    --bar: #0e4775;
+    --bar-text: #ffffff;
+    --row-alt: #f3f2f1;
+    --grid: #edebe9;
+    --grid-strong: #d2d0ce;
+    --today: #c4314b;
+    --critical: #c4314b;
+    --slipped: #d83b01;
+    --shadow: 0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.08);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; font-family: "Segoe UI", system-ui, -apple-system, sans-serif; color: var(--text); background: var(--bg); }
+  header {
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 16px; background: var(--panel);
+    border-bottom: 1px solid var(--border); box-shadow: var(--shadow);
+    flex-wrap: wrap;
+  }
+  header h1 { font-size: 14px; font-weight: 600; margin: 0; }
+  header .spacer { flex: 1; }
+  .tag { font-size: 11px; padding: 2px 6px; border-radius: 10px; background: #eef3f9; color: var(--accent); }
+
+  .toolbar { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .toolbar label { font-size: 12px; color: var(--muted); display: flex; align-items: center; gap: 4px; }
+  .toolbar select, .toolbar input[type="date"] {
+    font: inherit; font-size: 12px;
+    border: 1px solid var(--border); border-radius: 4px; padding: 3px 6px; background: #fff;
+  }
+  button.btn {
+    font: inherit; font-size: 12px;
+    border: 1px solid var(--border); background: #fff; color: var(--text);
+    border-radius: 4px; padding: 4px 10px; cursor: pointer;
+    transition: background .12s;
+  }
+  button.btn:hover { background: var(--row-alt); }
+  button.btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+  button.btn:disabled { opacity: .5; cursor: not-allowed; }
+
+  main {
+    display: grid;
+    grid-template-rows: auto var(--chart-row, 1fr) var(--data-row, auto);
+    height: calc(100vh - 51px);
+    overflow: hidden;
+  }
+  main.chart-collapsed { --chart-row: 0px; }
+  main.data-collapsed  { --data-row: auto; }
+  main.chart-collapsed .chart-wrap { display: none; }
+  main.chart-collapsed .top-timeline { display: none; }
+  main.data-collapsed .data-panel .dp-body { display: none; }
+  main.data-collapsed .data-panel { max-height: none; }
+
+  /* Data table */
+  .data-panel {
+    border-top: 1px solid var(--border); background: #fff;
+    max-height: 38vh; display: flex; flex-direction: column;
+    min-height: 0;
+  }
+  main.data-collapsed:not(.chart-collapsed) .data-panel { max-height: 36px; }
+  main.chart-collapsed .data-panel { max-height: none; flex: 1 1 auto; }
+  main.chart-collapsed .data-panel .dp-body { display: block; flex: 1 1 auto; }
+  .data-panel .dp-header {
+    display: flex; align-items: center; gap: 8px;
+    padding: 6px 12px; border-bottom: 1px solid var(--border); background: #faf9f8;
+  }
+  .data-panel .dp-header h2 { font-size: 12px; font-weight: 600; margin: 0; }
+  .data-panel .dp-body { overflow: auto; }
+  table.data-grid { border-collapse: collapse; width: 100%; font-size: 12px; }
+  table.data-grid th, table.data-grid td {
+    border-bottom: 1px solid var(--border); padding: 4px 8px; text-align: left;
+    white-space: nowrap;
+  }
+  table.data-grid th {
+    position: sticky; top: 0; background: #faf9f8; z-index: 1;
+    font-weight: 600; color: var(--text);
+  }
+  table.data-grid td input, table.data-grid td select {
+    font: inherit; font-size: 12px; border: 1px solid transparent; background: transparent;
+    padding: 2px 4px; width: 100%; border-radius: 3px;
+  }
+  table.data-grid td input:focus, table.data-grid td select:focus {
+    outline: none; border-color: var(--accent); background: #fff;
+  }
+  table.data-grid td input[type=number] { width: 70px; }
+  table.data-grid td input[type=date] { width: 130px; }
+  table.data-grid td.actions { text-align: right; }
+  table.data-grid tr.milestone-row td:first-child::before { content: "◆ "; color: var(--today); }
+  .icon-btn {
+    border: none; background: transparent; cursor: pointer; color: var(--muted);
+    padding: 2px 6px; border-radius: 3px; font-size: 14px; line-height: 1;
+  }
+  .icon-btn:hover { background: var(--row-alt); color: var(--text); }
+
+  /* Top-level timeline */
+  .top-timeline {
+    background: #fff; border-bottom: 1px solid var(--border);
+    overflow: hidden;
+  }
+  .top-timeline-inner { display: block; }
+
+  /* Chart wrapper */
+  .chart-wrap { position: relative; overflow: auto; background: #fff; min-height: 0; }
+  .chart { position: relative; }
+
+  /* Header (axis) */
+  .axis-svg { display: block; background: #fff; position: sticky; top: 0; z-index: 5; border-bottom: 1px solid var(--grid-strong); }
+
+  /* Rows */
+  .row { position: absolute; left: 0; right: 0; }
+  .row.alt { background: var(--row-alt); }
+  .row.group-row { background: #eef3f9; font-weight: 600; cursor: pointer; }
+  .row.group-row:hover { background: #e3edf8; }
+
+  .label-col {
+    position: sticky; left: 0; z-index: 4;
+    background: inherit;
+    border-right: 1px solid var(--border);
+    padding: 0 10px; display: flex; align-items: center;
+    font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .label-col .caret { width: 12px; text-align: center; color: var(--muted); display: inline-block; margin-right: 4px; }
+
+  .footer-status {
+    position: fixed; bottom: 8px; right: 12px; font-size: 11px; color: var(--muted);
+    background: rgba(255,255,255,.85); padding: 3px 8px; border-radius: 10px;
+    border: 1px solid var(--border);
+  }
+
+  /* SVG bar visuals */
+  .bar { rx: 4; }
+  .bar-progress { fill: rgba(255,255,255,.4); }
+  .bar-label { fill: var(--bar-text); font-size: 11px; font-weight: 600; pointer-events: none; }
+  .milestone { fill: #c4314b; }
+  /* dependencies */
+  .dep-line { stroke: #8a8886; stroke-width: 1.5; fill: none; stroke-linejoin: round; stroke-linecap: round; }
+  .dep-line.crit { stroke: #c4314b; stroke-width: 2; }
+  .dep-arrow { fill: #8a8886; }
+  .dep-arrow.crit { fill: #c4314b; }
+  .grid-line { stroke: var(--grid); stroke-width: 1; }
+  .grid-line.strong { stroke: var(--grid-strong); }
+  .axis-text { font-size: 11px; fill: var(--muted); }
+  .axis-text.primary { font-weight: 600; fill: var(--text); font-size: 12px; }
+  .today-line { stroke: var(--today); stroke-width: 2; stroke-dasharray: 4 3; }
+  .today-label { fill: var(--today); font-size: 10px; font-weight: 700; }
+
+  .bar.critical { stroke: var(--critical); stroke-width: 2; }
+  .bar.slipped { stroke: var(--slipped); stroke-width: 2; stroke-dasharray: 4 3; }
+
+  /* Tooltip */
+  .tt {
+    position: fixed; z-index: 50; pointer-events: none;
+    background: #fff; border: 1px solid var(--border); border-radius: 4px;
+    padding: 6px 8px; font-size: 12px; box-shadow: var(--shadow);
+    max-width: 260px;
+  }
+  .tt b { display:block; margin-bottom: 2px; }
+  .tt .meta { color: var(--muted); font-size: 11px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Gantt SPA Demo</h1>
+  <span class="tag" id="versionTag">v2.7.0.0 · standalone</span>
+  <div class="spacer"></div>
+  <div class="toolbar">
+    <label>Time scale
+      <select id="scaleMode">
+        <option value="auto" selected>Auto</option>
+        <option value="day">Day</option>
+        <option value="week">Week</option>
+        <option value="month">Month</option>
+        <option value="quarter">Quarter</option>
+        <option value="year">Year</option>
+      </select>
+    </label>
+    <label>Today
+      <input type="date" id="todayInput" />
+    </label>
+    <button class="btn" id="zoomOut" title="Zoom out">−</button>
+    <button class="btn" id="zoomIn" title="Zoom in">+</button>
+    <button class="btn" id="zoomFit" title="Fit">Fit</button>
+    <button class="btn" id="critToggle">Critical path</button>
+    <button class="btn" id="slipToggle">Slippage</button>
+    <button class="btn" id="expandAll">Expand all</button>
+    <button class="btn" id="collapseAll">Collapse all</button>
+  </div>
+</header>
+
+<main id="mainEl">
+  <div class="top-timeline" id="topTimeline"></div>
+  <div class="chart-wrap" id="chartWrap">
+    <div class="chart" id="chart"></div>
+    <button class="btn panel-toggle" id="toggleChart" title="Hide chart" style="position:absolute;top:6px;right:10px;z-index:10;">Hide chart ▴</button>
+  </div>
+  <div class="data-panel">
+    <div class="dp-header">
+      <button class="icon-btn" id="toggleData" title="Collapse" style="font-size:13px;">▾</button>
+      <h2>Tasks</h2>
+      <span style="font-size:11px;color:var(--muted);">Edit any cell &mdash; chart updates live</span>
+      <span style="flex:1"></span>
+      <button class="btn" id="addTask">+ Add task</button>
+      <button class="btn" id="showChart" style="display:none;">Show chart ▾</button>
+    </div>
+    <div class="dp-body">
+      <table class="data-grid" id="dataGrid"></table>
+    </div>
+  </div>
+</main>
+
+<div class="footer-status" id="status"></div>
+<div class="tt" id="tooltip" style="display:none"></div>
+
+<script>
+/* =========================================================
+ * Gantt SPA — single-file demo
+ * Mirrors visual concepts: groups, bars, progress, milestones,
+ * dependencies, today marker, critical path & slippage toggles,
+ * top-level summary timeline, auto/manual time scale, zoom.
+ * ========================================================= */
+
+/* ----------------- demo data ----------------- */
+const today = new Date(2026, 4, 4); // May 4, 2026
+function d(y, m, day) { return new Date(y, m - 1, day); }
+
+const TASKS = [
+  // Discovery
+  { id: "t1", group: "Discovery", name: "Stakeholder interviews", start: d(2026,3,2),  end: d(2026,3,13), progress: 100, resource: "Mei" },
+  { id: "t2", group: "Discovery", name: "Competitive research",   start: d(2026,3,9),  end: d(2026,3,20), progress: 100, resource: "Sam" },
+  { id: "t3", group: "Discovery", name: "Synthesis & insights",   start: d(2026,3,23), end: d(2026,3,31), progress: 90,  resource: "Mei", deps: ["t1","t2"] },
+  // Design
+  { id: "t4", group: "Design",    name: "Wireframes",              start: d(2026,4,1),  end: d(2026,4,14), progress: 75,  resource: "Priya", deps: ["t3"] },
+  { id: "t5", group: "Design",    name: "Visual design",           start: d(2026,4,8),  end: d(2026,4,28), progress: 40,  resource: "Priya" },
+  { id: "t6", group: "Design",    name: "Design review",           start: d(2026,4,29), end: d(2026,5,1),  progress: 0,   resource: "All",   deps: ["t5"], milestone: true },
+  // Build
+  { id: "t7", group: "Build",     name: "Frontend scaffolding",    start: d(2026,4,15), end: d(2026,4,30), progress: 50,  resource: "Jonah", deps: ["t4"] },
+  { id: "t8", group: "Build",     name: "Core components",         start: d(2026,5,2),  end: d(2026,5,22), progress: 10,  resource: "Jonah", deps: ["t7","t6"] },
+  { id: "t9", group: "Build",     name: "Backend integration",     start: d(2026,5,4),  end: d(2026,5,29), progress: 5,   resource: "Lina" },
+  { id: "t10",group: "Build",     name: "Beta release",            start: d(2026,6,1),  end: d(2026,6,1),  progress: 0,   resource: "All",   deps: ["t8","t9"], milestone: true },
+  // Launch
+  { id: "t11",group: "Launch",    name: "QA & accessibility",      start: d(2026,6,2),  end: d(2026,6,15), progress: 0,   resource: "QA team", deps: ["t10"] },
+  { id: "t12",group: "Launch",    name: "Marketing prep",          start: d(2026,5,18), end: d(2026,6,18), progress: 20,  resource: "Marketing" },
+  { id: "t13",group: "Launch",    name: "GA launch",               start: d(2026,6,22), end: d(2026,6,22), progress: 0,   resource: "All",   deps: ["t11","t12"], milestone: true },
+];
+
+/* ----------------- state ----------------- */
+const state = {
+  scale: "auto",          // auto | day | week | month | quarter | year
+  pxPerDay: 16,           // controlled by zoom
+  rowHeight: 28,
+  labelWidth: 240,
+  topTimelineHeight: 84,
+  axisHeight: 44,
+  showCritical: false,
+  showSlippage: false,
+  expanded: new Set(),    // group names that are expanded
+  todayDate: today,
+  dataTableDirty: true,   // rebuild data table on next render
+};
+// expand all by default
+[...new Set(TASKS.map(t => t.group))].forEach(g => state.expanded.add(g));
+
+/* ----------------- helpers ----------------- */
+const DAY = 86400000;
+function diffDays(a, b) { return Math.round((b - a) / DAY); }
+function addDays(d0, n) { const x = new Date(d0); x.setDate(x.getDate() + n); return x; }
+function startOfDay(x) { const y = new Date(x); y.setHours(0,0,0,0); return y; }
+function fmtDate(x) { return x.toLocaleDateString(undefined, { month: "short", day: "numeric" }); }
+function fmtFullDate(x) { return x.toLocaleDateString(undefined, { year:"numeric", month:"short", day:"numeric" }); }
+
+/* per-category color palette */
+const CATEGORY_PALETTE = ["#0e4775", "#4a90a4", "#7e57c2", "#1f6cb6", "#0b8c5a", "#d97706", "#0078d4"];
+function colorForGroup(name) {
+  const groups = [...new Set(TASKS.map(t => t.group))];
+  const idx = groups.indexOf(name);
+  return CATEGORY_PALETTE[(idx >= 0 ? idx : 0) % CATEGORY_PALETTE.length];
+}
+function shade(hex, amt) {
+  // simple darken/lighten of #rrggbb by amt (-1..1)
+  const n = parseInt(hex.slice(1), 16);
+  let r = (n >> 16) & 255, g = (n >> 8) & 255, b = n & 255;
+  const f = amt < 0 ? 1 + amt : 1;
+  const t = amt < 0 ? 0 : 255;
+  r = Math.round((t - r) * Math.abs(amt) + r * (amt < 0 ? f : 1));
+  g = Math.round((t - g) * Math.abs(amt) + g * (amt < 0 ? f : 1));
+  b = Math.round((t - b) * Math.abs(amt) + b * (amt < 0 ? f : 1));
+  return "#" + [r,g,b].map(v => v.toString(16).padStart(2,"0")).join("");
+}
+
+function projectExtent(tasks) {
+  let min = tasks[0].start, max = tasks[0].end;
+  for (const t of tasks) {
+    if (t.start < min) min = t.start;
+    if (t.end > max) max = t.end;
+  }
+  // pad
+  return [addDays(startOfDay(min), -2), addDays(startOfDay(max), 2)];
+}
+
+/* ----------------- critical path + slippage ----------------- */
+function computeCritical(tasks) {
+  const map = Object.fromEntries(tasks.map(t => [t.id, t]));
+  const memo = {};
+  function ef(t) {
+    if (memo[t.id]) return memo[t.id];
+    const dur = Math.max(1, diffDays(t.start, t.end));
+    let predEf = 0;
+    if (t.deps) for (const id of t.deps) { const p = map[id]; if (p) predEf = Math.max(predEf, ef(p)); }
+    return memo[t.id] = predEf + dur;
+  }
+  tasks.forEach(ef);
+  // late finish backwards from max EF
+  const projectFinish = Math.max(...tasks.map(ef));
+  const lf = {};
+  // initialize tasks with no successors
+  const successors = {};
+  tasks.forEach(t => { successors[t.id] = []; });
+  tasks.forEach(t => { (t.deps||[]).forEach(d => successors[d]?.push(t.id)); });
+  function lateFinish(t) {
+    if (lf[t.id] != null) return lf[t.id];
+    const succs = successors[t.id];
+    if (!succs.length) return lf[t.id] = projectFinish;
+    let m = Infinity;
+    for (const sid of succs) {
+      const s = map[sid];
+      const sLate = lateFinish(s);
+      const sDur = Math.max(1, diffDays(s.start, s.end));
+      m = Math.min(m, sLate - sDur);
+    }
+    return lf[t.id] = m;
+  }
+  tasks.forEach(lateFinish);
+  return new Set(tasks.filter(t => lf[t.id] - memo[t.id] === 0).map(t => t.id));
+}
+
+function isSlipped(t, todayDate) {
+  return t.end < todayDate && (t.progress ?? 0) < 100;
+}
+
+/* ----------------- scale logic ----------------- */
+function effectiveTier(rangeDays, pxPerDay) {
+  // chooses primary unit based on px-per-day
+  if (state.scale !== "auto") return state.scale;
+  const px = pxPerDay;
+  if (px >= 28) return "day";
+  if (px >= 9)  return "week";
+  if (px >= 3)  return "month";
+  if (px >= 1)  return "quarter";
+  return "year";
+}
+
+function ticksFor(unit, [s, e]) {
+  const out = [];
+  let cur;
+  if (unit === "day") {
+    cur = startOfDay(s);
+    while (cur <= e) { out.push({ date: new Date(cur), label: cur.toLocaleDateString(undefined,{month:"short",day:"numeric"}) }); cur = addDays(cur,1); }
+  } else if (unit === "week") {
+    cur = startOfDay(s);
+    // align to monday
+    const dow = (cur.getDay() + 6) % 7;
+    cur = addDays(cur, -dow);
+    while (cur <= e) { out.push({ date: new Date(cur), label: `${cur.toLocaleDateString(undefined,{month:"short",day:"numeric"})}` }); cur = addDays(cur, 7); }
+  } else if (unit === "month") {
+    cur = new Date(s.getFullYear(), s.getMonth(), 1);
+    while (cur <= e) { out.push({ date: new Date(cur), label: cur.toLocaleDateString(undefined,{month:"short", year:"numeric"}) }); cur = new Date(cur.getFullYear(), cur.getMonth()+1, 1); }
+  } else if (unit === "quarter") {
+    cur = new Date(s.getFullYear(), Math.floor(s.getMonth()/3)*3, 1);
+    while (cur <= e) { const q = Math.floor(cur.getMonth()/3)+1; out.push({ date: new Date(cur), label: `Q${q} ${cur.getFullYear()}` }); cur = new Date(cur.getFullYear(), cur.getMonth()+3, 1); }
+  } else { // year
+    cur = new Date(s.getFullYear(), 0, 1);
+    while (cur <= e) { out.push({ date: new Date(cur), label: `${cur.getFullYear()}` }); cur = new Date(cur.getFullYear()+1, 0, 1); }
+  }
+  return out;
+}
+
+function secondaryUnitFor(primary) {
+  return ({ day: "month", week: "month", month: "quarter", quarter: "year", year: null })[primary];
+}
+
+/* ----------------- layout ----------------- */
+function visibleRows(tasks) {
+  const rows = [];
+  const groups = [];
+  const order = [];
+  for (const t of tasks) if (!order.includes(t.group)) order.push(t.group);
+  for (const g of order) {
+    const groupTasks = tasks.filter(t => t.group === g);
+    const gStart = new Date(Math.min(...groupTasks.map(t => +t.start)));
+    const gEnd = new Date(Math.max(...groupTasks.map(t => +t.end)));
+    const gProgress = Math.round(groupTasks.reduce((s,t) => s + (t.progress||0), 0) / groupTasks.length);
+    rows.push({ kind: "group", name: g, start: gStart, end: gEnd, progress: gProgress, expanded: state.expanded.has(g) });
+    if (state.expanded.has(g)) for (const t of groupTasks) rows.push({ kind: "task", task: t });
+  }
+  return rows;
+}
+
+/* ----------------- rendering ----------------- */
+const chart = document.getElementById("chart");
+const chartWrap = document.getElementById("chartWrap");
+const topTimeline = document.getElementById("topTimeline");
+const tooltip = document.getElementById("tooltip");
+const statusEl = document.getElementById("status");
+
+function svg(name, attrs={}, children=[]) {
+  const el = document.createElementNS("http://www.w3.org/2000/svg", name);
+  for (const [k,v] of Object.entries(attrs)) el.setAttribute(k, v);
+  for (const c of children) el.appendChild(c);
+  return el;
+}
+
+function depPath(x1, y1, x2, y2, r = 6) {
+  // Finish-to-Start elbow with rounded corners.
+  // From end of predecessor (x1,y1) -> start of successor (x2,y2).
+  const stub = 8;                // small horizontal stub off the end of the predecessor
+  const gap  = Math.max(8, Math.min(20, (x2 - (x1 + stub)) / 2));
+  const goingForward = x2 > x1 + stub + r * 2;
+  const sameRow = Math.abs(y2 - y1) < 1;
+
+  if (sameRow && goingForward) {
+    return `M${x1},${y1} H${x2 - 2}`;
+  }
+
+  if (goingForward) {
+    // 3-segment: out, down/up, in
+    const midX = x1 + stub + gap;
+    const dy = y2 > y1 ? 1 : -1;
+    const r1 = Math.min(r, gap);
+    const r2 = Math.min(r, Math.max(2, x2 - midX - 2));
+    return [
+      `M${x1},${y1}`,
+      `H${midX - r1}`,
+      `Q${midX},${y1} ${midX},${y1 + dy * r1}`,
+      `V${y2 - dy * r2}`,
+      `Q${midX},${y2} ${midX + r2},${y2}`,
+      `H${x2 - 2}`
+    ].join(" ");
+  }
+
+  // Backwards routing: out, down halfway, back across, down to target, in
+  const outX = x1 + stub;
+  const inX  = x2 - stub;
+  const midY = y1 + (y2 - y1) / 2;
+  const dy = y2 > y1 ? 1 : -1;
+  const rr = Math.min(r, Math.abs(midY - y1), Math.abs(outX - inX) / 2 || r);
+  return [
+    `M${x1},${y1}`,
+    `H${outX - rr}`,
+    `Q${outX},${y1} ${outX},${y1 + dy * rr}`,
+    `V${midY - dy * rr}`,
+    `Q${outX},${midY} ${outX - rr},${midY}`,
+    `H${inX + rr}`,
+    `Q${inX},${midY} ${inX},${midY + dy * rr}`,
+    `V${y2 - dy * rr}`,
+    `Q${inX},${y2} ${inX + rr},${y2}`,
+    `H${x2 - 2}`
+  ].join(" ");
+}
+
+function showTip(html, evt) {
+  tooltip.innerHTML = html;
+  tooltip.style.display = "block";
+  const px = Math.min(evt.clientX + 12, window.innerWidth - 280);
+  const py = Math.min(evt.clientY + 14, window.innerHeight - 100);
+  tooltip.style.left = px + "px";
+  tooltip.style.top = py + "px";
+}
+function hideTip() { tooltip.style.display = "none"; }
+
+function render() {
+  const tasks = TASKS;
+  const [extentStart, extentEnd] = projectExtent(tasks);
+  const days = diffDays(extentStart, extentEnd) + 1;
+  const px = state.pxPerDay;
+  const totalW = days * px;
+  const labelW = state.labelWidth;
+  const primary = effectiveTier(days, px);
+  const secondary = secondaryUnitFor(primary);
+
+  const critSet = state.showCritical ? computeCritical(tasks) : new Set();
+  const rows = visibleRows(tasks);
+  const chartH = state.axisHeight + rows.length * state.rowHeight;
+
+  /* ---- AXIS / GRID (sticky header SVG) ---- */
+  const axis = svg("svg", { class: "axis-svg", width: labelW + totalW, height: state.axisHeight });
+  // label gutter background
+  axis.appendChild(svg("rect", { x: 0, y: 0, width: labelW, height: state.axisHeight, fill: "#fff", stroke: "#e1dfdd" }));
+  axis.appendChild(svg("text", { x: 12, y: 28, "font-size": 12, "font-weight": 600, fill: "#242424" }, [text("Task")]));
+
+  // secondary tier (top half)
+  if (secondary) {
+    const sTicks = ticksFor(secondary, [extentStart, extentEnd]);
+    sTicks.forEach((t, i) => {
+      const x = labelW + diffDays(extentStart, t.date) * px;
+      const next = sTicks[i+1] ? labelW + diffDays(extentStart, sTicks[i+1].date) * px : labelW + totalW;
+      axis.appendChild(svg("line", { x1: x, x2: x, y1: 0, y2: state.axisHeight, class: "grid-line strong" }));
+      const tx = svg("text", { x: x + 6, y: 16, class: "axis-text primary" });
+      tx.appendChild(text(t.label));
+      axis.appendChild(tx);
+      // restrict label visually
+      tx.setAttribute("clip-path", `inset(0 ${Math.max(0, totalW + labelW - next + 8)}px 0 0)`);
+    });
+  }
+  // primary ticks (bottom)
+  const pTicks = ticksFor(primary, [extentStart, extentEnd]);
+  pTicks.forEach(t => {
+    const x = labelW + diffDays(extentStart, t.date) * px;
+    axis.appendChild(svg("line", { x1: x, x2: x, y1: secondary ? 22 : 0, y2: state.axisHeight, class: "grid-line" }));
+    const tx = svg("text", { x: x + 4, y: state.axisHeight - 8, class: "axis-text" });
+    tx.appendChild(text(t.label));
+    axis.appendChild(tx);
+  });
+  // bottom border
+  axis.appendChild(svg("line", { x1: 0, x2: labelW + totalW, y1: state.axisHeight - 0.5, y2: state.axisHeight - 0.5, stroke: "#d2d0ce" }));
+
+  /* ---- BODY SVG (overlay): grid lines + bars + deps + today ---- */
+  const body = svg("svg", { width: labelW + totalW, height: rows.length * state.rowHeight, style: "display:block;" });
+  body.appendChild(svg("rect", { x: 0, y: 0, width: labelW + totalW, height: rows.length * state.rowHeight, fill: "#fff" }));
+
+  // alternating row backgrounds
+  rows.forEach((r, i) => {
+    if (r.kind === "group") {
+      const tint = shade(colorForGroup(r.name), 0.88);
+      body.appendChild(svg("rect", { x: 0, y: i*state.rowHeight, width: labelW + totalW, height: state.rowHeight, fill: tint }));
+    }
+  });
+  // vertical grid in chart area
+  pTicks.forEach(t => {
+    const x = labelW + diffDays(extentStart, t.date) * px;
+    body.appendChild(svg("line", { x1: x, x2: x, y1: 0, y2: rows.length * state.rowHeight, class: "grid-line" }));
+  });
+  if (secondary) {
+    const sTicks = ticksFor(secondary, [extentStart, extentEnd]);
+    sTicks.forEach(t => {
+      const x = labelW + diffDays(extentStart, t.date) * px;
+      body.appendChild(svg("line", { x1: x, x2: x, y1: 0, y2: rows.length * state.rowHeight, class: "grid-line strong" }));
+    });
+  }
+  // gutter divider
+  body.appendChild(svg("line", { x1: labelW - 0.5, x2: labelW - 0.5, y1: 0, y2: rows.length * state.rowHeight, stroke: "#e1dfdd" }));
+
+  // task bars
+  const taskCenters = {}; // for dependency arrows
+  rows.forEach((r, i) => {
+    const y = i * state.rowHeight;
+    if (r.kind === "group") {
+      // group summary bar
+      const x1 = labelW + diffDays(extentStart, r.start) * px;
+      const x2 = labelW + diffDays(extentStart, r.end) * px;
+      const barH = 6;
+      const gColor = colorForGroup(r.name);
+      body.appendChild(svg("rect", { x: x1, y: y + (state.rowHeight - barH)/2, width: Math.max(2, x2 - x1), height: barH, fill: gColor, rx: 2 }));
+      return;
+    }
+    const t = r.task;
+    const x1 = labelW + diffDays(extentStart, t.start) * px;
+    const x2 = labelW + diffDays(extentStart, t.end) * px;
+    const w = Math.max(2, x2 - x1);
+    const barH = 16;
+    const by = y + (state.rowHeight - barH)/2;
+
+    if (t.milestone) {
+      const cx = x1, cy = y + state.rowHeight/2;
+      const sz = 8;
+      const m = svg("polygon", { points: `${cx},${cy-sz} ${cx+sz},${cy} ${cx},${cy+sz} ${cx-sz},${cy}`, fill: colorForGroup(t.group) });
+      attachTip(m, () => milestoneTip(t));
+      body.appendChild(m);
+      taskCenters[t.id] = { left: cx, right: cx, y: cy };
+    } else {
+      const fill = colorForGroup(t.group);
+      const cls = ["bar"];
+      if (state.showCritical && critSet.has(t.id)) cls.push("critical");
+      if (state.showSlippage && isSlipped(t, state.todayDate)) cls.push("slipped");
+      const bar = svg("rect", { x: x1, y: by, width: w, height: barH, rx: 4, fill });
+      bar.setAttribute("class", cls.join(" "));
+      attachTip(bar, () => taskTip(t, critSet.has(t.id)));
+      body.appendChild(bar);
+      // progress
+      if (t.progress > 0) {
+        const pw = Math.max(0, Math.min(w, w * (t.progress/100)));
+        body.appendChild(svg("rect", { x: x1, y: by, width: pw, height: barH, rx: 4, fill: "rgba(255,255,255,.4)", "pointer-events": "none" }));
+      }
+      // duration label inside bar if it fits
+      if (w > 40) {
+        const lab = svg("text", { x: x1 + 6, y: by + barH - 4, class: "bar-label" });
+        lab.appendChild(text(`${diffDays(t.start, t.end)+1}d`));
+        body.appendChild(lab);
+      }
+      taskCenters[t.id] = { left: x1, right: x1 + w, y: by + barH/2 };
+    }
+  });
+
+  // dependencies (after bars so arrows draw on top)
+  const taskRowIdx = {};
+  rows.forEach((r, i) => { if (r.kind === "task") taskRowIdx[r.task.id] = i; });
+  rows.forEach(r => {
+    if (r.kind !== "task") return;
+    const t = r.task;
+    if (!t.deps) return;
+    const tc = taskCenters[t.id];
+    for (const did of t.deps) {
+      const pc = taskCenters[did];
+      if (!pc) continue;
+      const isCrit = state.showCritical && critSet.has(t.id) && critSet.has(did);
+      const startX = pc.right;
+      const startY = pc.y;
+      const endX = tc.left - 1;
+      const endY = tc.y;
+      body.appendChild(svg("path", {
+        d: depPath(startX, startY, endX, endY),
+        class: "dep-line" + (isCrit ? " crit" : "")
+      }));
+      // arrowhead (filled triangle pointing into the bar)
+      const ah = 5;
+      body.appendChild(svg("polygon", {
+        points: `${endX},${endY} ${endX - ah},${endY - ah*0.7} ${endX - ah},${endY + ah*0.7}`,
+        class: "dep-arrow" + (isCrit ? " crit" : "")
+      }));
+    }
+  });
+
+  // today line
+  if (state.todayDate >= extentStart && state.todayDate <= extentEnd) {
+    const tx = labelW + diffDays(extentStart, state.todayDate) * px;
+    body.appendChild(svg("line", { x1: tx, x2: tx, y1: 0, y2: rows.length * state.rowHeight, class: "today-line" }));
+    const tl = svg("text", { x: tx + 4, y: 12, class: "today-label" });
+    tl.appendChild(text("Today"));
+    body.appendChild(tl);
+  }
+
+  /* ---- LABEL COLUMN (HTML, sticky) ---- */
+  const html = [];
+  rows.forEach((r, i) => {
+    const top = i * state.rowHeight;
+    if (r.kind === "group") {
+      const caret = r.expanded ? "▾" : "▸";
+      const tint = shade(colorForGroup(r.name), 0.88);
+      const accent = colorForGroup(r.name);
+      html.push(`<div class="row group-row" style="top:${top}px;height:${state.rowHeight}px;width:${labelW}px;" data-group="${escAttr(r.name)}">
+        <div class="label-col" style="width:${labelW}px;height:${state.rowHeight}px;background:${tint};color:${shade(accent,-0.4)};">
+          <span class="caret">${caret}</span>${escHtml(r.name)} <span style="margin-left:auto;color:#605e5c;font-weight:400;">${r.progress}%</span>
+        </div>
+      </div>`);
+    } else {
+      const t = r.task;
+      html.push(`<div class="row" style="top:${top}px;height:${state.rowHeight}px;width:${labelW}px;background:#fff;">
+        <div class="label-col" style="width:${labelW}px;height:${state.rowHeight}px;background:#fff;padding-left:28px;">
+          ${escHtml(t.name)} <span style="margin-left:auto;color:#605e5c;font-size:11px;">${escHtml(t.resource||"")}</span>
+        </div>
+      </div>`);
+    }
+  });
+
+  // assemble
+  chart.innerHTML = "";
+  chart.style.position = "relative";
+  chart.style.width = (labelW + totalW) + "px";
+  chart.style.height = chartH + "px";
+
+  // axis at top
+  chart.appendChild(axis);
+
+  // body container (relative so HTML rows position over SVG)
+  const bodyWrap = document.createElement("div");
+  bodyWrap.style.position = "relative";
+  bodyWrap.style.width = (labelW + totalW) + "px";
+  bodyWrap.style.height = (rows.length * state.rowHeight) + "px";
+  bodyWrap.appendChild(body);
+  // overlay HTML rows above SVG (label gutter only — keeps chart area visible)
+  const rowOverlay = document.createElement("div");
+  rowOverlay.style.position = "absolute";
+  rowOverlay.style.top = 0;
+  rowOverlay.style.left = 0;
+  rowOverlay.style.width = labelW + "px";
+  rowOverlay.style.height = (rows.length * state.rowHeight) + "px";
+  rowOverlay.innerHTML = html.join("");
+  rowOverlay.querySelectorAll(".group-row").forEach(el => {
+    el.addEventListener("click", () => {
+      const g = el.dataset.group;
+      if (state.expanded.has(g)) state.expanded.delete(g); else state.expanded.add(g);
+      render();
+    });
+  });
+  bodyWrap.appendChild(rowOverlay);
+  chart.appendChild(bodyWrap);
+
+  if (state.dataTableDirty) { renderDataTable(); state.dataTableDirty = false; }
+
+  // top-level timeline
+  renderTopTimeline(extentStart, extentEnd, px, labelW, totalW);
+
+  // status text
+  const slip = tasks.filter(t => isSlipped(t, state.todayDate)).length;
+  const crit = critSet.size;
+  statusEl.textContent =
+    `${tasks.length} tasks · ${[...new Set(tasks.map(t => t.group))].length} groups` +
+    `${state.showCritical ? ` · ${crit} on critical path` : ""}` +
+    `${state.showSlippage ? ` · ${slip} slipping` : ""}`;
+}
+
+function renderTopTimeline(extentStart, extentEnd, px, labelW, totalW) {
+  topTimeline.innerHTML = "";
+  const h = state.topTimelineHeight;
+  const days = diffDays(extentStart, extentEnd);
+  const x = (date) => labelW + diffDays(extentStart, date) * px;
+
+  // vertical layout zones
+  const dateRowY  = 16;
+  const barY      = 26;
+  const barH      = 14;
+  const groupLblY = 60;
+  const groupLblY2 = 48;
+  const groupTickY = 68;
+
+  const w = labelW + totalW;
+  const s = svg("svg", { class: "top-timeline-inner", width: w, height: h });
+
+  // gutter background + caption
+  s.appendChild(svg("rect", { x: 0, y: 0, width: labelW, height: h, fill: "#fff" }));
+  s.appendChild(svg("text", { x: 12, y: 24, "font-size": 12, "font-weight": 600, fill: "#242424" }, [text("All")]));
+  s.appendChild(svg("text", { x: 12, y: 40, "font-size": 11, fill: "#605e5c" }, [text(`${TASKS.length} tasks`)]));
+  s.appendChild(svg("line", { x1: labelW - 0.5, x2: labelW - 0.5, y1: 0, y2: h, stroke: "#e1dfdd" }));
+
+  // overall bar
+  const overallStart = new Date(Math.min(...TASKS.map(t => +t.start)));
+  const overallEnd = new Date(Math.max(...TASKS.map(t => +t.end)));
+  const x1 = x(overallStart), x2 = x(overallEnd);
+  s.appendChild(svg("rect", { x: x1, y: barY, width: Math.max(2, x2 - x1), height: barH, fill: "#0e4775", rx: 4, opacity: .9 }));
+  // progress
+  const totalDur = diffDays(overallStart, overallEnd) || 1;
+  const elapsed = Math.max(0, Math.min(totalDur, diffDays(overallStart, state.todayDate)));
+  s.appendChild(svg("rect", { x: x1, y: barY, width: Math.max(0, (elapsed/totalDur) * (x2-x1)), height: barH, fill: "rgba(255,255,255,.45)" }));
+
+  // start/end date labels
+  s.appendChild(svg("text", { x: x1, y: dateRowY, "font-size": 10, fill: "#605e5c" }, [text(fmtDate(overallStart))]));
+  s.appendChild(svg("text", { x: x2, y: dateRowY, "font-size": 10, fill: "#605e5c", "text-anchor": "end" }, [text(fmtDate(overallEnd))]));
+
+  // group ticks + labels
+  const groups = [...new Set(TASKS.map(t => t.group))];
+  const groupLayout = groups.map(g => {
+    const gt = TASKS.filter(t => t.group === g);
+    const gs = new Date(Math.min(...gt.map(t => +t.start)));
+    const ge = new Date(Math.max(...gt.map(t => +t.end)));
+    return { name: g, gx1: x(gs), gx2: x(ge) };
+  });
+  groupLayout.forEach(g => {
+    s.appendChild(svg("rect", { x: g.gx1, y: groupTickY, width: Math.max(2, g.gx2 - g.gx1), height: 2, fill: colorForGroup(g.name), rx: 1 }));
+  });
+  const measure = (txt) => Math.max(20, txt.length * 6);
+  let lastRight = [-Infinity, -Infinity];
+  groupLayout.forEach(g => {
+    const tw = measure(g.name);
+    const want = g.gx1;
+    let row = 0;
+    if (want < lastRight[0] + 6) row = 1;
+    if (row === 1 && want < lastRight[1] + 6) row = 0;
+    const y = row === 0 ? groupLblY : groupLblY2;
+    s.appendChild(svg("text", { x: g.gx1, y, "font-size": 10, fill: colorForGroup(g.name), "font-weight": 600 }, [text(g.name)]));
+    lastRight[row] = want + tw;
+  });
+
+  // today
+  if (state.todayDate >= overallStart && state.todayDate <= overallEnd) {
+    const tx = x(state.todayDate);
+    s.appendChild(svg("line", { x1: tx, x2: tx, y1: barY - 6, y2: groupTickY + 6, class: "today-line" }));
+  }
+
+  topTimeline.appendChild(s);
+}
+
+/* ----------------- tooltips ----------------- */
+function attachTip(el, makeHtml) {
+  el.style.cursor = "default";
+  el.addEventListener("mousemove", (e) => showTip(makeHtml(), e));
+  el.addEventListener("mouseleave", hideTip);
+}
+function taskTip(t, isCrit) {
+  const dur = diffDays(t.start, t.end) + 1;
+  return `<b>${escHtml(t.name)}</b>
+    <div class="meta">${escHtml(t.group)} · ${escHtml(t.resource||"")}</div>
+    <div>${fmtFullDate(t.start)} → ${fmtFullDate(t.end)}</div>
+    <div>${dur} day${dur>1?"s":""} · ${t.progress||0}% complete</div>
+    ${isCrit ? `<div style="color:#c4314b;font-weight:600;">On critical path</div>` : ""}
+    ${isSlipped(t, state.todayDate) ? `<div style="color:#d83b01;font-weight:600;">Slipped</div>` : ""}`;
+}
+function milestoneTip(t) {
+  return `<b>${escHtml(t.name)}</b>
+    <div class="meta">${escHtml(t.group)} · Milestone</div>
+    <div>${fmtFullDate(t.start)}</div>`;
+}
+
+/* ----------------- utilities ----------------- */
+function text(s) { const t = document.createTextNode(s); return t; }
+function escHtml(s) { return String(s).replace(/[&<>"']/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c])); }
+function escAttr(s) { return escHtml(s); }
+
+/* ----------------- editable data table ----------------- */
+const dataGrid = document.getElementById("dataGrid");
+
+function toInputDate(d0) {
+  const y = d0.getFullYear(), m = String(d0.getMonth()+1).padStart(2,"0"), dd = String(d0.getDate()).padStart(2,"0");
+  return `${y}-${m}-${dd}`;
+}
+function fromInputDate(s) { const [y,m,d] = s.split("-").map(Number); return new Date(y, m-1, d); }
+
+function renderDataTable() {
+  const groups = [...new Set(TASKS.map(t => t.group))];
+  const allIds = TASKS.map(t => t.id);
+  const head = `<thead><tr>
+    <th>Name</th><th>Group</th><th>Start</th><th>End</th><th>Progress %</th>
+    <th>Resource</th><th>Milestone</th><th>Dependencies</th><th></th>
+  </tr></thead>`;
+  const body = TASKS.map((t, i) => {
+    const depsVal = (t.deps||[]).join(",");
+    const depOpts = allIds.filter(id => id !== t.id).map(id => {
+      const tk = TASKS.find(x => x.id === id);
+      const sel = (t.deps||[]).includes(id) ? " selected" : "";
+      return `<option value="${id}"${sel}>${escHtml(tk.name)}</option>`;
+    }).join("");
+    return `<tr data-idx="${i}" class="${t.milestone ? "milestone-row" : ""}">
+      <td><input data-field="name" value="${escAttr(t.name)}" /></td>
+      <td><input data-field="group" list="groupList" value="${escAttr(t.group)}" /></td>
+      <td><input data-field="start" type="date" value="${toInputDate(t.start)}" /></td>
+      <td><input data-field="end" type="date" value="${toInputDate(t.end)}" /></td>
+      <td><input data-field="progress" type="number" min="0" max="100" value="${t.progress||0}" /></td>
+      <td><input data-field="resource" value="${escAttr(t.resource||"")}" /></td>
+      <td style="text-align:center;"><input data-field="milestone" type="checkbox" ${t.milestone?"checked":""} /></td>
+      <td><select data-field="deps" multiple size="1" style="min-width:160px;">${depOpts}</select></td>
+      <td class="actions"><button class="icon-btn" data-action="delete" title="Delete">&times;</button></td>
+    </tr>`;
+  }).join("");
+  const datalist = `<datalist id="groupList">${groups.map(g => `<option value="${escAttr(g)}">`).join("")}</datalist>`;
+  dataGrid.innerHTML = head + "<tbody>" + body + "</tbody>" + datalist;
+
+  dataGrid.querySelectorAll("tbody tr").forEach(tr => {
+    const idx = +tr.dataset.idx;
+    tr.querySelectorAll("input,select").forEach(inp => {
+      // Live-update chart on every keystroke for text/number, but only rebuild
+      // the table on a structural change (so focus isn't lost while typing).
+      const liveEvt = (inp.tagName === "INPUT" && (inp.type === "text" || inp.type === "number" || inp.type === "")) ? "input" : "change";
+      const handler = (rebuildTable) => {
+        const t = TASKS[idx];
+        const f = inp.dataset.field;
+        if (f === "milestone") t.milestone = inp.checked;
+        else if (f === "progress") t.progress = Math.max(0, Math.min(100, +inp.value || 0));
+        else if (f === "start") { if (!inp.value) return; t.start = fromInputDate(inp.value); if (t.end < t.start) t.end = t.start; }
+        else if (f === "end")   { if (!inp.value) return; t.end   = fromInputDate(inp.value); if (t.end < t.start) t.start = t.end; }
+        else if (f === "deps") t.deps = [...inp.selectedOptions].map(o => o.value);
+        else t[f] = inp.value;
+        if (f === "group" && !state.expanded.has(t.group)) state.expanded.add(t.group);
+        if (rebuildTable) state.dataTableDirty = true;
+        render();
+      };
+      inp.addEventListener(liveEvt, () => handler(false));
+      // On blur for text/number, rebuild table (e.g. group label may have changed)
+      if (liveEvt === "input") {
+        inp.addEventListener("change", () => handler(inp.dataset.field === "group"));
+      }
+    });
+    tr.querySelector("[data-action=delete]").addEventListener("click", () => {
+      TASKS.splice(idx, 1);
+      TASKS.forEach(x => { if (x.deps) x.deps = x.deps.filter(d => TASKS.some(z => z.id === d)); });
+      state.dataTableDirty = true;
+      render();
+    });
+  });
+}
+
+document.getElementById("addTask").addEventListener("click", () => {
+  const last = TASKS[TASKS.length-1];
+  const newId = "t" + (Math.max(0, ...TASKS.map(t => +String(t.id).replace(/\D/g,"")||0)) + 1);
+  TASKS.push({
+    id: newId,
+    group: last ? last.group : "New",
+    name: "New task",
+    start: startOfDay(state.todayDate),
+    end: addDays(startOfDay(state.todayDate), 5),
+    progress: 0,
+    resource: ""
+  });
+  state.expanded.add(TASKS[TASKS.length-1].group);
+  state.dataTableDirty = true;
+  render();
+});
+
+/* ----------------- toolbar wiring ----------------- */
+const scaleSel = document.getElementById("scaleMode");
+scaleSel.value = state.scale;
+scaleSel.addEventListener("change", () => {
+  state.scale = scaleSel.value;
+  // map manual choices to a sensible pxPerDay default
+  const map = { auto: state.pxPerDay, day: 32, week: 12, month: 5, quarter: 2, year: 0.6 };
+  if (state.scale !== "auto") state.pxPerDay = map[state.scale];
+  render();
+});
+document.getElementById("zoomIn").addEventListener("click", () => { state.pxPerDay = Math.min(80, state.pxPerDay * 1.4); render(); });
+document.getElementById("zoomOut").addEventListener("click", () => { state.pxPerDay = Math.max(0.4, state.pxPerDay / 1.4); render(); });
+document.getElementById("zoomFit").addEventListener("click", () => {
+  const [s,e] = projectExtent(TASKS);
+  const days = diffDays(s,e) + 1;
+  const usable = chartWrap.clientWidth - state.labelWidth - 24;
+  state.pxPerDay = Math.max(0.4, usable / days);
+  render();
+});
+document.getElementById("critToggle").addEventListener("click", (e) => {
+  state.showCritical = !state.showCritical;
+  e.currentTarget.classList.toggle("active", state.showCritical);
+  render();
+});
+document.getElementById("slipToggle").addEventListener("click", (e) => {
+  state.showSlippage = !state.showSlippage;
+  e.currentTarget.classList.toggle("active", state.showSlippage);
+  render();
+});
+document.getElementById("expandAll").addEventListener("click", () => {
+  [...new Set(TASKS.map(t => t.group))].forEach(g => state.expanded.add(g));
+  render();
+});
+document.getElementById("collapseAll").addEventListener("click", () => {
+  state.expanded.clear(); render();
+});
+const todayInput = document.getElementById("todayInput");
+todayInput.value = state.todayDate.toISOString().slice(0,10);
+todayInput.addEventListener("change", () => {
+  if (todayInput.value) { state.todayDate = startOfDay(new Date(todayInput.value)); render(); }
+});
+
+window.addEventListener("resize", render);
+
+/* ----------------- sync horizontal scroll between chart and top timeline ----------------- */
+chartWrap.addEventListener("scroll", () => {
+  topTimeline.scrollLeft = chartWrap.scrollLeft;
+});
+
+/* ----------------- panel collapse toggles ----------------- */
+const mainEl = document.getElementById("mainEl");
+const toggleDataBtn = document.getElementById("toggleData");
+const toggleChartBtn = document.getElementById("toggleChart");
+const showChartBtn = document.getElementById("showChart");
+
+function setDataCollapsed(collapsed) {
+  mainEl.classList.toggle("data-collapsed", collapsed);
+  toggleDataBtn.textContent = collapsed ? "▸" : "▾";
+  toggleDataBtn.title = collapsed ? "Expand data" : "Collapse data";
+}
+function setChartCollapsed(collapsed) {
+  mainEl.classList.toggle("chart-collapsed", collapsed);
+  showChartBtn.style.display = collapsed ? "" : "none";
+  toggleChartBtn.textContent = collapsed ? "Show chart ▾" : "Hide chart ▴";
+  // ensure data shows when chart is hidden
+  if (collapsed) setDataCollapsed(false);
+  if (!collapsed) render();
+}
+
+toggleDataBtn.addEventListener("click", () => {
+  setDataCollapsed(!mainEl.classList.contains("data-collapsed"));
+});
+toggleChartBtn.addEventListener("click", () => setChartCollapsed(true));
+showChartBtn.addEventListener("click", () => setChartCollapsed(false));
+
+/* go */
+requestAnimationFrame(() => {
+  // collapse data panel by default
+  setDataCollapsed(true);
+  // fit on initial load
+  const [s0,e0] = projectExtent(TASKS);
+  const days0 = diffDays(s0,e0) + 1;
+  const usable0 = chartWrap.clientWidth - state.labelWidth - 24;
+  if (usable0 > 0) state.pxPerDay = Math.max(0.4, usable0 / days0);
+  render();
+});
+</script>
+</body>
+</html>
