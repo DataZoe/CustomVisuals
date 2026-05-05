@@ -69,7 +69,7 @@ Use a numeric Start/End instead of dates to chart schedules in hours, minutes, d
 
 ### 📅 Flexible Time Scale
 
-Control how the date axis displays with Auto or Manual mode. Auto intelligently selects day, week, month, quarter, or year intervals based on your date range. Manual mode lets you choose specific units and optionally add a secondary tier for hierarchical grouping (e.g., weeks under months, months under years).
+Control how the date axis displays with the **Auto time scale** toggle. When on (default), the visual selects day, week, month, quarter, or year intervals based on your date range. Turn it off to manually choose a primary unit and optionally add a secondary tier for hierarchical grouping (e.g., weeks under months, months under years).
 
 ### 🔍 Context Column Filtering
 
@@ -148,10 +148,12 @@ Optionally include:
 
 1. With the visual selected, click the **Format** pane (paint roller icon)
 2. Expand the formatting cards to customize:
+   - **Style presets**: Quick layout/spacing presets
+   - **Layout**: Axis & column positions, zoom controls visibility
+   - **Axis**: Auto/manual time scale, relative units, axis title, grid lines, divider, row & day shading
+   - **Columns**: Task / Context / Resource column fonts, colors, widths
    - **Bars**: Colors, borders, opacity, height, duration label, progress overlay
    - **Milestones**: Shape, color, size
-   - **Columns**: Task / Context / Resource column fonts, colors, widths
-   - **Axis**: Time scale, units, axis title, grid lines, divider, row & day shading
    - **Top level timeline / Category timeline**: Summary roll-up rows above the chart and per-category
    - **Markers**: Today line and any custom Marker Date measures
    - **Analytics**: Dependencies, Critical path, Slippage, Resource conflicts
@@ -585,7 +587,7 @@ In the visual's settings, set Start/End units to **Hour** and pick the appropria
 
 ## Formatting Options Reference
 
-The format pane is organized into ten cards (in display order: **Style presets, Layout, Axis, Columns, Bars, Milestones, Top level timeline, Category timeline, Markers, Analytics**). Most numeric and color options support **conditional formatting**, allowing you to set values based on data fields.
+The format pane is organized into ten cards (in display order: **Style presets, Layout, Axis, Columns, Bars, Milestones, Top level timeline, Category timeline, Markers, Analytics**).
 
 ---
 
@@ -612,7 +614,7 @@ Quick layout adjustments using presets.
 
 ### 2. Layout
 
-Controls where the date axis and the various label columns are placed around the chart.
+Controls where the date axis and the various label columns are placed around the chart, plus on-canvas chrome (zoom controls).
 
 #### Position Group
 
@@ -623,6 +625,12 @@ Controls where the date axis and the various label columns are placed around the
 | Context columns | Place context columns on the left or right of the chart | Left |
 | Resource column | Place the Resource column on the left or right of the chart | Left |
 
+#### Zoom controls Group
+
+| Setting | Description | Default |
+|---------|-------------|---------|
+| Show | Show the zoom +/− buttons on the chart | On |
+
 ---
 
 ### 3. Axis
@@ -631,13 +639,15 @@ Date axis units (calendar or relative), axis title, grid lines, divider, row ban
 
 #### Units Group
 
+*Disabled when Start/End columns are numeric (relative-units mode).*
+
 | Setting | Description | Default |
 |---------|-------------|---------|
-| Time scale | Auto picks the best fit; Manual lets you choose units | Auto |
-| Primary unit | Main time unit for labels and grid lines (Day / Week / Month / Quarter / Year) | Week |
-| Secondary unit | Optional grouping tier above primary labels (None / Week / Month / Quarter / Year) | None |
-| Week starts on | First day of the week for week-unit calculations | Monday |
-| Day unit min width | Minimum width per day in pixels (1–100) | 10 |
+| Auto time scale | When On, the visual picks the best fit automatically. Turn Off to choose units manually. | On |
+| Primary unit | Main time unit for labels and grid lines (Day / Week / Month / Quarter / Year). Hidden when Auto is On. | Week |
+| Secondary unit | Optional grouping tier above primary labels (None / Week / Month / Quarter / Year). Hidden when Auto is On. | None |
+| Week starts on | First day of the week for week-unit calculations. Hidden when Auto is On. | Monday |
+| Day unit min width | Minimum width per day in pixels (1–100). Hidden when Auto is On. | 10 |
 
 **Auto mode behavior:**
 
@@ -651,7 +661,7 @@ Date axis units (calendar or relative), axis title, grid lines, divider, row ban
 
 #### Relative Units Group
 
-*Active only when the Start column is numeric (relative-units mode).*
+*Disabled when Start/End columns are dates. Active only when Start is numeric (relative-units mode).*
 
 | Setting | Description | Default |
 |---------|-------------|---------|
@@ -811,11 +821,6 @@ A grand-summary "All" row that rolls every task into one bar (or one bar per cat
 
 | Setting | Description | Default |
 |---------|-------------|---------|
-| Show value | Show duration label on the summary bar | On |
-| Value font | Font family, size (6–24), bold, italic, underline | Segoe UI, 10pt, Bold |
-| Value color | Label text color | #ffffff |
-| Value auto contrast | Pick black or white to contrast with the bar color | On |
-| Unit | Duration unit shown in the value label (Days / Weeks / Months) | Days |
 | Breakdown | Single bar OR segmented by category | Single bar |
 | Include milestones | Show milestone markers on the summary row | On |
 | Header label | Label shown next to the top-level row | All |
@@ -831,6 +836,16 @@ A grand-summary "All" row that rolls every task into one bar (or one bar per cat
 | Height (%) | Bar height as a percentage of row height (20–100) | 60 |
 | Corner radius | Rounded corners (0–12 px) | 2 |
 | Row height (%) | Row height as a percentage of the default row height (50–500) | 100 |
+
+#### Label Group
+
+| Setting | Description | Default |
+|---------|-------------|---------|
+| Show (group toggle) | Show the duration label on the summary bar | On |
+| Font | Font family, size (6–24), bold, italic, underline | Segoe UI, 10pt, Bold |
+| Color | Label text color | #ffffff |
+| Auto contrast | Pick black or white to contrast with the bar color | On |
+| Unit | Duration unit shown in the label (Days / Weeks / Months) | Days |
 
 ---
 
@@ -851,12 +866,22 @@ Summary bars per category (driven by the Category data field). Card-level toggle
 
 | Setting | Description | Default |
 |---------|-------------|---------|
+| Show (group toggle) | Show the per-category summary bar | On |
 | Color | Default category bar color | #9E9E9E |
 | Use category colors | Color each summary bar with the category's first task color | Off |
 | Opacity (%) | Bar transparency (10–100) | 100 |
 | Height (%) | Bar height as a percentage of row height (20–100) | 60 |
 | Corner radius | Rounded corners (0–12 px) | 2 |
 | Row height (%) | Row height as a percentage of the default row height (50–500) | 100 |
+
+#### Label Group
+
+| Setting | Description | Default |
+|---------|-------------|---------|
+| Show (group toggle) | Show the duration label on the per-category summary bar | On |
+| Font | Font family, size (6–24), bold, italic, underline | Segoe UI, 10pt, Bold |
+| Color | Label text color | #ffffff |
+| Auto contrast | Pick black or white to contrast with the bar color | On |
 
 ---
 
@@ -932,6 +957,19 @@ Dependency arrows plus the three analytics features (Critical path, Slippage, Re
 *When detection is on, any two non-milestone tasks that share a resource (case-insensitive; comma-separated values are split) AND overlap in time get a colored pill on the resource cell. Hover the cell to see which other tasks are in conflict. Click a resource cell to focus that resource — rows whose tasks don't include it are dimmed; click empty chart space to clear.*
 
 ## Version History
+
+### Version 2.7.0.0
+
+**Format pane cleanup and UX:**
+
+- **Time scale** is now an **Auto time scale** toggle (default On). When On, the Primary unit / Secondary unit / Week starts on / Day unit min width controls are hidden. Turn Off to configure units manually.
+- The two **Units** groups in the Axis card are now context-aware: when Start/End columns are dates, the Relative units group is **disabled** (greyed out with a hover reason). When Start/End are numeric (relative mode), the standard Units group is disabled. Both stay visible so the user can see what's available.
+- Removed conditional-formatting (fx) buttons from every color/numeric control in the format pane. The previous fx-on-everything was noisy and the persistence model didn't fit a table dataView. Per-category coloring will return in a future release.
+- **Category timeline** card cleaned up: Bar group adds Show toggle, opacity, height, corner radius, row height, and an option to color the summary bar with the first task's color. New **Label** subgroup splits font/color/auto-contrast away from the bar settings.
+- **Top level timeline** card: Label subgroup split out from the bar settings; the bar group adds row-height controls.
+- **Layout positions** card: new **Zoom controls** group with a Show toggle to hide the zoom +/- buttons.
+- **Resource conflicts** toggle on the canvas now widens to fit and shows a count pill summary when there are conflicts.
+- Removed the redundant "Task" header line from the bar tooltip.
 
 ### Version 2.6.0.0
 
