@@ -1,0 +1,90 @@
+{
+  "name": "Bar Chart Race Dark",
+  "dataColors": [
+    "#B45BFF",
+    "#4A1B7A",
+    "#FFD166",
+    "#5CE1A1",
+    "#FF7B9C",
+    "#E5B3FF",
+    "#8A5FBF",
+    "#F0E6FF"
+  ],
+  "background": "#0B0324",
+  "foreground": "#F0E6FF",
+  "foregroundNeutralSecondary": "#F0E6FF",
+  "foregroundNeutralTertiary": "#E5B3FF",
+  "backgroundLight": "#1A0940",
+  "backgroundNeutral": "#2A0F4A",
+  "tableAccent": "#B45BFF",
+  "good": "#5CE1A1",
+  "neutral": "#8A5FBF",
+  "bad": "#FF7B9C",
+  "maximum": "#B45BFF",
+  "center": "#8A5FBF",
+  "minimum": "#4A1B7A",
+  "null": "#2A0F4A",
+  "hyperlink": "#E5B3FF",
+  "visitedHyperlink": "#B45BFF",
+  "textClasses": {
+    "title": { "color": "#F0E6FF", "fontFace": "Segoe UI Semibold" },
+    "header": { "color": "#F0E6FF", "fontFace": "Segoe UI Semibold" },
+    "label": { "color": "#F0E6FF", "fontFace": "Segoe UI" },
+    "callout": { "color": "#F0E6FF", "fontFace": "Segoe UI Light" }
+  },
+  "visualStyles": {
+    "*": {
+      "*": {
+        "background": [
+          { "color": { "solid": { "color": "#0B0324" } }, "transparency": 0 }
+        ],
+        "border": [
+          { "show": false }
+        ],
+        "outspacePane": [
+          {
+            "backgroundColor": { "solid": { "color": "#0B0324" } },
+            "foregroundColor": { "solid": { "color": "#F0E6FF" } },
+            "transparency": 0,
+            "border": true,
+            "borderColor": { "solid": { "color": "#2A0F4A" } },
+            "titleSize": 12,
+            "headerSize": 10,
+            "fontFamily": "Segoe UI",
+            "inputBoxColor": { "solid": { "color": "#1A0940" } }
+          }
+        ],
+        "filterCard": [
+          {
+            "$id": "Applied",
+            "backgroundColor": { "solid": { "color": "#0B0324" } },
+            "foregroundColor": { "solid": { "color": "#F0E6FF" } },
+            "transparency": 0,
+            "border": true,
+            "borderColor": { "solid": { "color": "#2A0F4A" } },
+            "inputBoxColor": { "solid": { "color": "#1A0940" } }
+          },
+          {
+            "$id": "Available",
+            "backgroundColor": { "solid": { "color": "#0B0324" } },
+            "foregroundColor": { "solid": { "color": "#F0E6FF" } },
+            "transparency": 0,
+            "border": true,
+            "borderColor": { "solid": { "color": "#2A0F4A" } },
+            "inputBoxColor": { "solid": { "color": "#1A0940" } }
+          }
+        ]
+      }
+    },
+    "page": {
+      "*": {
+        "background": [
+          { "color": { "solid": { "color": "#0B0324" } }, "transparency": 0 }
+        ],
+        "outspace": [
+          { "color": { "solid": { "color": "#0B0324" } }, "transparency": 0 }
+        ]
+      }
+    }
+  }
+}
